@@ -2,6 +2,11 @@ List of git commands to work with heroku:
 
 Followed off of this tutorial: https://www.youtube.com/watch?v=BPvg9bndP1U
 
+Login to Heroku
+---------------------
+heroku login
+
+
 heroku git:remote -a discord-quote-bot-jon
 
 Adds changes that you have made: 
