@@ -17,6 +17,9 @@ Pushes the changes to heroku with a comment of what's commiting
 --------------------------------
 git commit -am "Explain what you're committing"
 
+git push heroku master
+
+
 To view the logs
 ---------------------------
 heroku logs -a discord-quote-bot-jon
