@@ -15,7 +15,6 @@ def randomQuote():
 	response = ''
 	number = random.randint(0, len(data['messages'])) #Generates a random number to the length of the quotes
 	response = str(data['messages'][number]['content']) #Finds the quote
-
 	
 
 	while len(response) < 8: #If the response is a short quote of less than 8 characters, try again
@@ -27,23 +26,19 @@ def randomQuote():
 			response = str(data['messages'][number]['content'])
 
 		
-	
-		
-	print (response)
+			
 	return (response)
-
 
 @client.event
 async def on_message(message):
 	if message.content.find("!quote") != -1:
 		await message.channel.send(randomQuote())
 
-	if message.content.find("!update") != -1:
-		await message.channel.send('Last updated on 5-29-2020')
+	elif message.content.find("!update") != -1:
+		await message.channel.send('Last updated on 06-01-2020')
 
-	if message.content.find("!creator") != -1:
+	elif message.content.find("!creator") != -1:
 		await message.channel.send('Created by Jon Doucette')
-
 
 client.run('NzE1ODExMjE3OTAxNjE3MTUy.XtCpSA.AgiLs1GN8JbPzUCcKnIp6Qk7bWs')
 
