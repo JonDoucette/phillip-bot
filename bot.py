@@ -1,8 +1,17 @@
 import discord
 import json
 import random
+from discord.ext import commands
+from discord.utils import get
 
 client = discord.Client()
+client = commands.Bot(command_prefix = '!')
+
+
+@client.event
+async def on_ready():
+	await client.change_presence(status = discord.Status.online, activity = discord.Game('Executing Muzz'))
+	print('Bot is ready')
 
 
 #Method for obtaining random quote from JSON file
@@ -25,20 +34,28 @@ def randomQuote():
 			number = random.randint(0, len(data['messages'])) 
 			response = str(data['messages'][number]['content'])
 
-		
-			
 	return (response)
+
+
+@client.command()
+async def quote(ctx):
+	await ctx.send(randomQuote())
+
+@client.command()
+async def update(ctx):
+	await ctx.send('Last updated on 06-08-2020')
+
+@client.command()
+async def creator(ctx):
+	await ctx.send('Created by Jon Doucette')
+
 
 @client.event
 async def on_message(message):
-	if message.content.find("!quote") != -1:
-		await message.channel.send(randomQuote())
+	if message.author.id == 219308580036280321:
+		await message.add_reaction('\u2753')
 
-	elif message.content.find("!update") != -1:
-		await message.channel.send('Last updated on 06-01-2020')
+	await client.process_commands(message)
 
-	elif message.content.find("!creator") != -1:
-		await message.channel.send('Created by Jon Doucette')
-
-client.run('NzE1ODExMjE3OTAxNjE3MTUy.XtCpSA.AgiLs1GN8JbPzUCcKnIp6Qk7bWs')
+client.run('NzE1ODExMjE3OTAxNjE3MTUy.Xt8P_w.fLQqsCXf8W9-4WhbtbOXBHroBGY')
 
