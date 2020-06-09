@@ -5872,7 +5872,7 @@
         "name": "braiku",
         "discriminator": "8496",
         "isBot": false,
-        "avatarUrl": "https://cdn.discordapp.com/avatars/142425634398797826/5628697b45ee1d9c27ae9b3c2e41b472.png"
+        "avatarUrl": "https://cdn.discordapp.com/avatars/142425634398797826/931cb7a602ddb0ae67cf3bbd5085aeab.png"
       },
       "attachments": [],
       "embeds": [],
@@ -6177,7 +6177,7 @@
         "name": "braiku",
         "discriminator": "8496",
         "isBot": false,
-        "avatarUrl": "https://cdn.discordapp.com/avatars/142425634398797826/5628697b45ee1d9c27ae9b3c2e41b472.png"
+        "avatarUrl": "https://cdn.discordapp.com/avatars/142425634398797826/931cb7a602ddb0ae67cf3bbd5085aeab.png"
       },
       "attachments": [],
       "embeds": [],
@@ -6299,7 +6299,7 @@
         "name": "braiku",
         "discriminator": "8496",
         "isBot": false,
-        "avatarUrl": "https://cdn.discordapp.com/avatars/142425634398797826/5628697b45ee1d9c27ae9b3c2e41b472.png"
+        "avatarUrl": "https://cdn.discordapp.com/avatars/142425634398797826/931cb7a602ddb0ae67cf3bbd5085aeab.png"
       },
       "attachments": [],
       "embeds": [],
@@ -6425,12 +6425,120 @@
         "name": "braiku",
         "discriminator": "8496",
         "isBot": false,
-        "avatarUrl": "https://cdn.discordapp.com/avatars/142425634398797826/5628697b45ee1d9c27ae9b3c2e41b472.png"
+        "avatarUrl": "https://cdn.discordapp.com/avatars/142425634398797826/931cb7a602ddb0ae67cf3bbd5085aeab.png"
+      },
+      "attachments": [],
+      "embeds": [],
+      "reactions": []
+    },
+    {
+      "id": "718730324313374720",
+      "type": "Default",
+      "timestamp": "2020-06-06T07:37:42.68+00:00",
+      "timestampEdited": null,
+      "isPinned": false,
+      "content": "\u0022No means yes\u0022 - Antwon 6/6/2020",
+      "author": {
+        "id": "189517569995046912",
+        "name": "Jonesy",
+        "discriminator": "7069",
+        "isBot": false,
+        "avatarUrl": "https://cdn.discordapp.com/avatars/189517569995046912/817206913c514f12a365916a0af8c1ea.png"
+      },
+      "attachments": [],
+      "embeds": [],
+      "reactions": []
+    },
+    {
+      "id": "718731483019345920",
+      "type": "Default",
+      "timestamp": "2020-06-06T07:42:18.937+00:00",
+      "timestampEdited": null,
+      "isPinned": false,
+      "content": "\u0022Aborting the fetus\u0022 - Antwon 6/6/2020",
+      "author": {
+        "id": "189517569995046912",
+        "name": "Jonesy",
+        "discriminator": "7069",
+        "isBot": false,
+        "avatarUrl": "https://cdn.discordapp.com/avatars/189517569995046912/817206913c514f12a365916a0af8c1ea.png"
+      },
+      "attachments": [],
+      "embeds": [],
+      "reactions": []
+    },
+    {
+      "id": "718731837090037840",
+      "type": "Default",
+      "timestamp": "2020-06-06T07:43:43.354+00:00",
+      "timestampEdited": null,
+      "isPinned": false,
+      "content": "\u0022Aborting the fetus\u0022 - Raywan 6/6/2020",
+      "author": {
+        "id": "163338213186863104",
+        "name": "Slamunga",
+        "discriminator": "2072",
+        "isBot": false,
+        "avatarUrl": "https://cdn.discordapp.com/avatars/163338213186863104/c7f7a0d315e1069d13133e122ec1c151.png"
+      },
+      "attachments": [],
+      "embeds": [],
+      "reactions": []
+    },
+    {
+      "id": "718735325081632860",
+      "type": "Default",
+      "timestamp": "2020-06-06T07:57:34.956+00:00",
+      "timestampEdited": null,
+      "isPinned": false,
+      "content": "\u0022What am I doing? Trying to put my boner back\u0022 - Antwon 6/6/2020",
+      "author": {
+        "id": "189517569995046912",
+        "name": "Jonesy",
+        "discriminator": "7069",
+        "isBot": false,
+        "avatarUrl": "https://cdn.discordapp.com/avatars/189517569995046912/817206913c514f12a365916a0af8c1ea.png"
+      },
+      "attachments": [],
+      "embeds": [],
+      "reactions": []
+    },
+    {
+      "id": "719312957032628285",
+      "type": "Default",
+      "timestamp": "2020-06-07T22:12:53.145+00:00",
+      "timestampEdited": null,
+      "isPinned": false,
+      "content": "\u0022Riot doesn\u0027t give a shit.\u0022 Zach \u0027ff you muslms\u0027 W. 6/7/2020",
+      "author": {
+        "id": "150480364895338496",
+        "name": "xir",
+        "discriminator": "4228",
+        "isBot": false,
+        "avatarUrl": "https://cdn.discordapp.com/avatars/150480364895338496/e8f195cfe12fe43e2f2a83caa22e2b11.png"
+      },
+      "attachments": [],
+      "embeds": [],
+      "reactions": []
+    },
+    {
+      "id": "719750146765750272",
+      "type": "Default",
+      "timestamp": "2020-06-09T03:10:07.3+00:00",
+      "timestampEdited": null,
+      "isPinned": false,
+      "content": "\u0022Why did you get banned peyton\u0022 -Bryce \u0022Because I said the N word in chat\u0022 -Peyton 6/8/2020",
+      "author": {
+        "id": "142425634398797826",
+        "name": "braiku",
+        "discriminator": "8496",
+        "isBot": false,
+        "avatarUrl": "https://cdn.discordapp.com/avatars/142425634398797826/931cb7a602ddb0ae67cf3bbd5085aeab.png"
       },
       "attachments": [],
       "embeds": [],
       "reactions": []
     }
   ],
-  "messageCount": 297
+  "messageCount": 303
 }
