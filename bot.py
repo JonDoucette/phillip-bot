@@ -24,22 +24,33 @@ def randomQuote():
 	response = ''
 	number = random.randint(0, len(data['messages'])) #Generates a random number to the length of the quotes
 	response = str(data['messages'][number]['content']) #Finds the quote
-	
+	embed = discord.Embed(color = 0x607d8b, description = response)
 
 	while len(response) < 8: #If the response is a short quote of less than 8 characters, try again
-		
+
 		if len(response) == 0: #If the response is blank (i.e. there is only an image)
-			response = str(data['messages'][number]['attachments'][0]['url']) #Pull up the url of the image and post that
+			response = str(data['messages'][number]['attachments'][0]['url']) #Sets response to the URL 
+			embed.set_image(url = response) #Adds an image to the embed
+			
+
 		else:
-			number = random.randint(0, len(data['messages'])) 
+			#Generates a new quote 
+			number = random.randint(0, len(data['messages']))
 			response = str(data['messages'][number]['content'])
 
-	return (response)
+			#Creates new embed with updated description
+			embed2 = discord.Embed(color = 0x607d8b, description = response)
+			embed = embed2
+			
+
+	
+	return (embed)
 
 
 @client.command()
 async def quote(ctx):
-	await ctx.send(randomQuote())
+	response = randomQuote()
+	await ctx.send(embed = response)
 
 @client.command()
 async def update(ctx):
