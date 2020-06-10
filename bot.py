@@ -15,13 +15,13 @@ numbers = []
 used_numbers = []
 reactId = 0
 
-tilt = {}
 
 
 @client.event
 async def on_ready():
 	await client.change_presence(status = discord.Status.online, activity = discord.Game('Executing Muzz'))
 	print('Bot is ready')
+
 
 #Method for obtaining random quote from JSON file
 def randomQuote():
@@ -102,27 +102,72 @@ async def agents(ctx, *, users):
 
 	await ctx.send(embed = embed)
 
-#@client.command(aliases = ['tilt'])
-#async def tilted(ctx, user):
+@client.command(aliases = ['tilt'])
+@commands.has_permissions(administrator = True)
+async def tilted(ctx, member : discord.Member):
 
-#	print(user)
+	user = member.id
 
-#	wb = openpyxl.load_workbook('tilted.xlsx')
-#	sheet = wb['output']
-#	for rowNum in range(1, sheet.max_row+1):
-#		excelName = sheet.cell(row=rowNum, column=1).value
-#		if excelName == user:
-#			previous = sheet.cell(row=rowNum, column=2).value
-#			tiltAmount = random.randint(0,200)
-#			new = previous - tiltAmount
-#			sheet.cell(row=rowNum, column=2).value = new
+	if user == 715811217901617152: #Determines if the user is the bot
+		embed = discord.Embed(color = 0x607d8b, description = "Robots can't be tilted.")
+		await ctx.send(embed = embed)
+		
+	else:
+		count = 0 #Value to determine if user already exists on spreadsheet
+		wb = openpyxl.load_workbook('tilted.xlsx')
+		sheet = wb['output']
+		tiltAmount = random.randint(0,250) #Random amount to be tilted by 
 
-#	wb.save('tilted.xlsx')
-#	wb.close()
+		for rowNum in range(1, sheet.max_row+1):
+			excelName = sheet.cell(row=rowNum, column=1).value
+			if excelName == user:
+				previous = sheet.cell(row=rowNum, column=2).value
+				new = previous - tiltAmount
+				if new <= 0: #If they have tilted below 0
+					await member.kick(reason='Tilted off of the face of the discord')
+					embed.discordEmbed(color = 0x607d8b, description = f'{member.mention} has tilted off of the face of the discord.')
+					new = 0
+					count += 1
+				else:
+					sheet.cell(row=rowNum, column=2).value = new
+					count += 1
+					embed = discord.Embed(color = 0x607d8b, description = member.mention + ' was tilted by ' 
+					+ str(tiltAmount) + '. Their new mmr is: ' + str(new))
 
-#	await ctx.send(user + ' was tilted by ' + str(tiltAmount) + '. Their new mmr is: ' + str(new))
+		if count == 0: #Creates a new row for the new user
+			column=sheet['A']
+			addition_row = (len(column))+1
+			sheet.cell(row=addition_row, column = 1).value = user
+			new = 1000 - tiltAmount
+			sheet.cell(row=addition_row, column = 2).value = new
 
-	
+			embed = discord.Embed(color = 0x607d8b, description = member.mention + ' was tilted by ' 
+			+ str(tiltAmount) + '. Their new mmr is: ' + str(new))
+
+		wb.save('tilted.xlsx')
+		wb.close()
+
+		
+
+		await ctx.send(embed = embed)
+
+@client.command(aliases = ['clearTilted'])
+@commands.has_permissions(administrator = True)
+async def resetTilted(ctx):
+
+	wb = openpyxl.load_workbook('tilted.xlsx')
+	sheet = wb['output']
+
+	for row in sheet['A1:B200']: #Clears all of these cells
+		for cell in row:
+			cell.value = None
+
+	wb.save('tilted.xlsx')
+	wb.close()
+
+	embed = discord.Embed(color = 0x607d8b, description = 'All discord tilt MMRs have been reset')
+	await ctx.send(embed = embed)
+
 @client.command()
 async def help(ctx):
 
@@ -138,7 +183,8 @@ async def help(ctx):
 			  ('`!update`', 'Last time the bot was updated', False),
 			  ('`!game` or `!games` or `!movies`', "Enter games after command to create a poll\n Place a space between each game like:\n `!game Valorant League TTT`", False),
 			  ('`!creator`', 'Lists the creator of the bot', False),
-			  ('`!agents`', 'Picks Valorant Agents for the user to play \n Place a space between each user like: \n`!agents @user1 @user2` ', False)]
+			  ('`!agents`', 'Picks Valorant Agents for the user to play \n Place a space between each user like: \n`!agents @user1 @user2` ', False),
+			  ('`!tilted` or `!clearTilted`', '*Note: For Administrators only* \n Drops a users discord MMR randomly by 0 to 250, at 0 MMR they are kicked.', False)]
 
 	for name, value, inline in fields:
 		embed.add_field(name=name, value=value, inline = inline)
@@ -188,6 +234,7 @@ async def game(ctx, *, games):
 
 
 
+
 @client.event
 async def on_reaction_add(reaction, user):
 	global reactId
@@ -196,15 +243,6 @@ async def on_reaction_add(reaction, user):
 		if reaction.emoji not in used_numbers:
 			await reaction.clear()
 
-
-#@tasks.loop(seconds = 5)
-#async def remove_reactions():
-#	print('removing reaction')
-#	global reactId
-##	print reactId.
-#	for reaction in reactId():
-#		if reaction not in numbers:
-#			await reactId.clear(reaction)
 
 @game.error
 async def game_error(ctx, error):
@@ -220,6 +258,11 @@ async def agents_error(ctx, error):
 						\nExample: `!agents @user1 @user2`')
 		await ctx.send(embed = embed)
 
+@tilted.error
+async def tilted_error(ctx, error):
+	if isinstance(error, commands.MissingRequiredArgument):
+		embed = discord.Embed(color = 0x607d8b, description = 'Please @ a specific user.')
+		await ctx.send(embed = embed)
 
 
 #Sends a question mark any message Zach sends
