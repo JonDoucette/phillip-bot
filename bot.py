@@ -134,7 +134,7 @@ async def tilted(ctx, member : discord.Member):
 					+ str(tiltAmount) + '. Their new mmr is: ' + str(new))
 
 		else:
-			empty = sheet.getColumn(1).index('')
+			empty = sheet.getColumn(1).index('0')
 			empty = empty + 1
 			sheet[1, empty] = user
 			sheet[2, empty] = 1000
