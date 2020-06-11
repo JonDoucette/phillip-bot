@@ -2,7 +2,7 @@ import discord
 import json
 import random
 import datetime
-import ezsheets
+import openpyxl
 
 from discord.ext import commands, tasks
 from itertools import cycle
@@ -14,7 +14,7 @@ client.remove_command('help') #Removes the old command
 numbers = []
 used_numbers = []
 reactId = 0
-ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+
 
 
 @client.event
@@ -113,31 +113,41 @@ async def tilted(ctx, member : discord.Member):
 		await ctx.send(embed = embed)
 		
 	else:
-		sheet = ss['output']
+		count = 0 #Value to determine if user already exists on spreadsheet
+		wb = openpyxl.load_workbook('tilted.xlsx')
+		sheet = wb['output']
 		tiltAmount = random.randint(0,250) #Random amount to be tilted by 
 
-		if user in sheet.getColumn(1):
-			location = sheet.getColumn(1).index(user)
-			location += 1
-			points = sheet[2, location]
-			new = points - tiltAmount
-			if new <= 0: #If they have tilted below 0
-				await member.kick(reason='Tilted off of the face of the discord')
-				embed.discord.Embed(color = 0x607d8b, description = f'{member.mention} has tilted off of the face of the discord.')
-				new = 0
-				sheet[2, location] = new
-			else:
-				sheet[2, location] = new
-				embed = discord.Embed(color = 0x607d8b, description = member.mention + ' was tilted by ' 
+		for rowNum in range(1, sheet.max_row+1):
+			excelName = sheet.cell(row=rowNum, column=1).value
+			if excelName == user:
+				previous = sheet.cell(row=rowNum, column=2).value
+				new = previous - tiltAmount
+				if new <= 0: #If they have tilted below 0
+					await member.kick(reason='Tilted off of the face of the discord')
+					embed.discordEmbed(color = 0x607d8b, description = f'{member.mention} has tilted off of the face of the discord.')
+					new = 0
+					count += 1
+				else:
+					sheet.cell(row=rowNum, column=2).value = new
+					count += 1
+					embed = discord.Embed(color = 0x607d8b, description = member.mention + ' was tilted by ' 
 					+ str(tiltAmount) + '. Their new mmr is: ' + str(new))
 
-		else:
-			empty = sheet.getColumn(1).index('')
-			empty = empty + 1
-			sheet[1, empty] = user
-			sheet[2, empty] = 1000
-			sheet[3, empty] = member.name
+		if count == 0: #Creates a new row for the new user
+			column=sheet['A']
+			addition_row = (len(column))+1
+			sheet.cell(row=addition_row, column = 1).value = user
+			new = 1000 - tiltAmount
+			sheet.cell(row=addition_row, column = 2).value = new
 
+			embed = discord.Embed(color = 0x607d8b, description = member.mention + ' was tilted by ' 
+			+ str(tiltAmount) + '. Their new mmr is: ' + str(new))
+
+		wb.save('tilted.xlsx')
+		wb.close()
+
+		
 
 		await ctx.send(embed = embed)
 
