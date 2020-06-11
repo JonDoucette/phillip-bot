@@ -109,8 +109,10 @@ async def tilted(ctx, member : discord.Member):
 
 
 	user = member.id
+	user = str(user)
 
-	if user == 715811217901617152: #Determines if the user is the bot
+
+	if user == '715811217901617152': #Determines if the user is the bot
 		embed = discord.Embed(color = 0x607d8b, description = "Robots can't be tilted.")
 		await ctx.send(embed = embed)
 		
@@ -122,7 +124,9 @@ async def tilted(ctx, member : discord.Member):
 			location = sheet.getColumn(1).index(user)
 			location += 1
 			points = sheet[2, location]
+			points = int(points)
 			new = points - tiltAmount
+
 			if new <= 0: #If they have tilted below 0
 				await member.kick(reason='Tilted off of the face of the discord')
 				embed.discord.Embed(color = 0x607d8b, description = f'{member.mention} has tilted off of the face of the discord.')
@@ -130,15 +134,19 @@ async def tilted(ctx, member : discord.Member):
 				sheet[2, location] = new
 			else:
 				sheet[2, location] = new
-				embed = discord.Embed(color = 0x607d8b, description = member.mention + ' was tilted by ' 
-					+ str(tiltAmount) + '. Their new mmr is: ' + str(new))
 
 		else:
-			empty = sheet.getColumn(1).index('0')
+			empty = sheet.getColumn(1).index('')
 			empty = empty + 1
+			points = 1000
+			new = points - tiltAmount
 			sheet[1, empty] = user
-			sheet[2, empty] = 1000
+			sheet[2, empty] = new
 			sheet[3, empty] = member.name
+			
+
+		embed = discord.Embed(color = 0x607d8b, description = member.mention + ' was tilted by ' 
+				+ str(tiltAmount) + '. Their new mmr is: ' + str(new))
 
 
 		await ctx.send(embed = embed)
