@@ -18,7 +18,7 @@ reactId = 0
 
 @client.event
 async def on_ready():
-	await client.change_presence(status = discord.Status.online, activity = discord.Game('Executing Muzz'))
+	await client.change_presence(status = discord.Status.online, activity = discord.Game('Give Jon Suggestions'))
 	print('Bot is ready')
 
 
@@ -55,6 +55,8 @@ def randomQuote():
 	return (embed)
 
 
+#COMMANDS
+
 @client.command()
 async def quote(ctx):
 	response = randomQuote()
@@ -81,14 +83,32 @@ async def agents(ctx, *, users):
 
 	users = users.split()
 	response = ''
+	footer = 'Additional characters: '
 
 	for i, user in enumerate(users):
 		number = random.randint(0, len(agents)-1)
 		response += (str(i+1) + '. '+ user + ' - ' + agents[number] + '\n')
 		del agents[number]
 
+	print(agents)
+
+
+	for counter, i in enumerate(agents): #Creates the footer of other agents if agent now owned
+		if counter <3:
+			number = random.randint(0, len(agents)-1)
+			footer += agents[number] + ', '
+			del agents[number]
+		else:
+			break
+
+	footer = footer[:-2] #Removes the last comma and space and adds a period
+	footer += '.'
+
 	embed = discord.Embed(color = 0xFF0000, timestamp = datetime.datetime.utcnow(),
 		description = response, title = 'Valorant Picks')
+
+
+	embed.set_footer(text = footer)
 
 	#Sets who created the agents
 	author = ctx.message.author
@@ -107,7 +127,6 @@ async def tilted(ctx, member : discord.Member):
 
 	ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
 
-
 	user = member.id
 	user = str(user)
 
@@ -124,7 +143,12 @@ async def tilted(ctx, member : discord.Member):
 			location = sheet.getColumn(1).index(user)
 			location += 1
 			points = sheet[2, location]
-			points = int(points)
+			
+			if points == '':
+				points = 1000
+			else:
+				points = int(points)
+
 			new = points - tiltAmount
 
 			if new <= 0: #If they have tilted below 0
@@ -151,19 +175,55 @@ async def tilted(ctx, member : discord.Member):
 
 		await ctx.send(embed = embed)
 
-@client.command(aliases = ['clearTilted'])
+@client.command(aliases = ['untilt'])
+@commands.has_permissions(administrator = True)
+async def untilted(ctx, member : discord.Member):
+
+	ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+
+	user = member.id
+	user = str(user)
+
+	if user == '715811217901617152': #Determines if the user is the bot
+		embed = discord.Embed(color = 0x607d8b, description = "Robots can't be tilted or untilted.")
+		await ctx.send(embed = embed)
+	else:
+		sheet = ss['output']
+		untiltAmount = random.randint(0,250) #Random amount to be tilted by 
+
+		if user in sheet.getColumn(1):
+			location = sheet.getColumn(1).index(user)
+			location += 1
+			points = sheet[2, location]
+			
+			if points == '':
+				points = 1000
+			else:
+				points = int(points)
+
+			new = points + untiltAmount
+			sheet[2, location] = new
+		else:
+			empty = sheet.getColumn(1).index('')
+			empty = empty + 1
+			points = 1000
+			new = points + untiltAmount
+			sheet[1, empty] = user
+			sheet[2, empty] = new
+			sheet[3, empty] = member.name
+
+	embed = discord.Embed(color = 0x607d8b, description = member.mention + ' has been untilted by ' 
+				+ str(untiltAmount) + '. Their new mmr is: ' + str(new))
+
+	await ctx.send(embed = embed)
+
+@client.command(aliases = ['clearTilted', 'clearTilt', 'resetTilt'])
 @commands.has_permissions(administrator = True)
 async def resetTilted(ctx):
 
-	wb = openpyxl.load_workbook('tilted.xlsx')
-	sheet = wb['output']
-
-	for row in sheet['A1:B200']: #Clears all of these cells
-		for cell in row:
-			cell.value = None
-
-	wb.save('tilted.xlsx')
-	wb.close()
+	ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+	sheet = ss['output']
+	sheet.updateColumn(2, ['MMR']) #Updates all of column 2 to only contain Title
 
 	embed = discord.Embed(color = 0x607d8b, description = 'All discord tilt MMRs have been reset')
 	await ctx.send(embed = embed)
@@ -184,7 +244,7 @@ async def help(ctx):
 			  ('`!game` or `!games` or `!movies`', "Enter games after command to create a poll\n Place a space between each game like:\n `!game Valorant League TTT`", False),
 			  ('`!creator`', 'Lists the creator of the bot', False),
 			  ('`!agents`', 'Picks Valorant Agents for the user to play \n Place a space between each user like: \n`!agents @user1 @user2` ', False),
-			  ('`!tilted` or `!clearTilted`', '*Note: For Administrators only* \n Drops a users discord MMR randomly by 0 to 250, at 0 MMR they are kicked.', False)]
+			  ('`!tilted`, `!untilted` or `!clearTilted`', '*Note: For Administrators only* \n Drops/Increases a users discord MMR randomly by 0 to 250, at 0 MMR they are kicked.', False)]
 
 	for name, value, inline in fields:
 		embed.add_field(name=name, value=value, inline = inline)
@@ -241,6 +301,8 @@ async def on_reaction_add(reaction, user):
 			await reaction.clear()
 
 
+#ERROR HANDLING
+
 @game.error
 async def game_error(ctx, error):
 	if isinstance(error, commands.MissingRequiredArgument):
@@ -261,6 +323,9 @@ async def tilted_error(ctx, error):
 		embed = discord.Embed(color = 0x607d8b, description = 'Please @ a specific user.')
 		await ctx.send(embed = embed)
 
+
+
+#ON_MESSAGE
 
 #Sends a question mark any message Zach sends
 @client.event
