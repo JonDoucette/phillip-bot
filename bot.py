@@ -355,5 +355,6 @@ async def on_message(message):
 
 	await client.process_commands(message)
 
-client.run('NzE1ODExMjE3OTAxNjE3MTUy.XuSBKw.bbraUqSkAZfbblzCxnXgRWq2Jdc')
+client.run('NzE1ODExMjE3OTAxNjE3MTUy.XuT9Tg.dxEEEw2ULSx2lwLEmRWLzk_r7jg') #Phillip
+#client.run('NzIxMjI4MTM3NDMzNjYxNTIw.XuT73w.TQVGmTNPFRwR4jpPEZOKdORk2QU') #Test Boteroni
 

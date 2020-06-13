@@ -44,6 +44,7 @@ class Gambling(commands.Cog):
 
 	#Commands
 	@commands.command()
+	@commands.cooldown(1, 25, commands.BucketType.user)
 	async def bet(self, ctx, amount = None, choice = None):
 
 		"""
@@ -133,7 +134,7 @@ class Gambling(commands.Cog):
 		if amount > credits:
 			await ctx.send(author.mention + ", you don't have enough credits.\n You have " + str(credits) + ' credits.')
 		else:
-			dice = random.randint(1,11)
+			dice = random.randint(1,10)
 			
 			if dice < 6:
 				roll = 'low'
@@ -166,10 +167,36 @@ class Gambling(commands.Cog):
 
 			await ctx.send(embed = embed)
 
+	@commands.command(aliases = ['credit'])
+	async def credits(self, ctx):
+		author = ctx.message.author
+		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		sheet = ss['output']
+		user = author.id
+		user = str(user)
 
+		#If the user exists
+		if user in sheet.getColumn(1):
+			location = sheet.getColumn(1).index(user)
+			location += 1
+			credits = sheet[5, location]
 
+			if credits == '':
+				credits = STARTING_CREDITS
+			else:
+				credits = int(credits)
+		#If the user doesn't exist yet
+		else:
+			empty = sheet.getColumn(1).index('')
+			location = empty + 1
+			sheet[1, location] = user
+			sheet[3, location] = author.name
+			credits = sheet[5, location] = STARTING_CREDITS
+			crates 	= sheet[6, location] = STARTING_CRATES
+			xp 		= sheet[7, location] = STARTING_EXP
+			level 	= sheet[8, location] = STARTING_LEVEL
 
-
+		await ctx.send(author.mention + f', you have {credits:,d} credits.')
 
 
 
@@ -181,7 +208,11 @@ class Gambling(commands.Cog):
 	async def bet_error(self, ctx, error):
 		if isinstance(error, commands.MissingRequiredArgument):
 			embed = discord.Embed(color = 0x607d8b, description = 'Please @ a specific user.')
-			await ctx.send(embed = embed)	
+			await ctx.send(embed = embed)
+		if isinstance(error, commands.CommandOnCooldown):
+			await ctx.send(error)
+
+
 
 
 
