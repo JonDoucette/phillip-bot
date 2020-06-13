@@ -142,7 +142,7 @@ class Gambling(commands.Cog):
 				roll = 'high'
 
 			if choice.lower() == roll: #If the user guesses correctly
-				profit = amount * BET_PAYOUT
+				profit = amount
 				credits += profit
 
 				sheet[5, location] = credits
