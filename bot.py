@@ -3,6 +3,7 @@ import json
 import random
 import datetime
 import ezsheets
+import os
 
 from discord.ext import commands, tasks
 from itertools import cycle
@@ -10,6 +11,11 @@ from itertools import cycle
 client = discord.Client()
 client = commands.Bot(command_prefix = '!', case_insensitive = True)
 client.remove_command('help') #Removes the old command
+
+for filename in os.listdir('./cogs'):
+	if filename.endswith('.py'):
+		client.load_extension(f'cogs.{filename[:-3]}')
+
 
 numbers = []
 used_numbers = []
@@ -19,6 +25,8 @@ reactId = 0
 @client.event
 async def on_ready():
 	await client.change_presence(status = discord.Status.online, activity = discord.Game('Give Jon Suggestions'))
+
+
 	print('Bot is ready')
 
 
@@ -242,9 +250,10 @@ async def help(ctx):
 	fields = [('`!quote`', 'Pulls a quote from the Mind-Break-Book', False),
 			  ('`!update`', 'Last time the bot was updated', False),
 			  ('`!game` or `!games` or `!movies`', "Enter games after command to create a poll\n Place a space between each game like:\n `!game Valorant League TTT`", False),
-			  ('`!creator`', 'Lists the creator of the bot', False),
+			  ('`!bet <amount> <choice>`', 'Guess if number is high or low\n (low = 1-5, high = 6-10)', False),
 			  ('`!agents`', 'Picks Valorant Agents for the user to play \n Place a space between each user like: \n`!agents @user1 @user2` ', False),
-			  ('`!tilted`, `!untilted` or `!clearTilted`', '*Note: For Administrators only* \n Drops/Increases a users discord MMR randomly by 0 to 250, at 0 MMR they are kicked.', False)]
+			  ('`!tilted`, `!untilted` or `!clearTilted`', '*Note: For Administrators only* \n Drops/Increases a users discord MMR randomly by 0 to 250, at 0 MMR they are kicked.', False),
+			  ('`!creator`', 'Lists the creator of the bot', False)]
 
 	for name, value, inline in fields:
 		embed.add_field(name=name, value=value, inline = inline)
@@ -300,6 +309,17 @@ async def on_reaction_add(reaction, user):
 		if reaction.emoji not in used_numbers:
 			await reaction.clear()
 
+@client.command()
+async def load(ctx, extension):
+	client.load_extension(f'cogs.{extension}')
+
+@client.command()
+async def unload(ctx, extension):
+	client.unload_extension(f'cogs.{extension}')
+
+
+
+
 
 #ERROR HANDLING
 
@@ -335,5 +355,5 @@ async def on_message(message):
 
 	await client.process_commands(message)
 
-client.run('NzE1ODExMjE3OTAxNjE3MTUy.Xt8P_w.fLQqsCXf8W9-4WhbtbOXBHroBGY')
+client.run('NzE1ODExMjE3OTAxNjE3MTUy.XuSBKw.bbraUqSkAZfbblzCxnXgRWq2Jdc')
 
