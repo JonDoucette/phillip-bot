@@ -98,9 +98,6 @@ async def agents(ctx, *, users):
 		response += (str(i+1) + '. '+ user + ' - ' + agents[number] + '\n')
 		del agents[number]
 
-	print(agents)
-
-
 	for counter, i in enumerate(agents): #Creates the footer of other agents if agent now owned
 		if counter <3:
 			number = random.randint(0, len(agents)-1)
