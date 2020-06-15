@@ -9,7 +9,7 @@ from discord.ext import commands, tasks
 from itertools import cycle
 
 client = discord.Client()
-client = commands.Bot(command_prefix = '!', case_insensitive = True)
+client = commands.Bot(command_prefix = '.', case_insensitive = True)
 client.remove_command('help') #Removes the old command
 
 for filename in os.listdir('./cogs'):
@@ -352,6 +352,6 @@ async def on_message(message):
 
 	await client.process_commands(message)
 
-client.run('NzE1ODExMjE3OTAxNjE3MTUy.XuT9Tg.dxEEEw2ULSx2lwLEmRWLzk_r7jg') #Phillip
-#client.run('NzIxMjI4MTM3NDMzNjYxNTIw.XuT73w.TQVGmTNPFRwR4jpPEZOKdORk2QU') #Test Boteroni
+#client.run('NzE1ODExMjE3OTAxNjE3MTUy.XuT9Tg.dxEEEw2ULSx2lwLEmRWLzk_r7jg') #Phillip
+client.run('NzIxMjI4MTM3NDMzNjYxNTIw.XuT73w.TQVGmTNPFRwR4jpPEZOKdORk2QU') #Test Boteroni
 
