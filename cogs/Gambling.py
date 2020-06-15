@@ -423,7 +423,7 @@ class Gambling(commands.Cog):
 		gamesPlayed = int(sheet[10, location])
 		betProfit = int(sheet[11, location])
 
-		embed = discord.Embed(color = 0xffff00)
+		embed = discord.Embed(color = 0xffff00, title = f'Stats for: {author.name}')
 		embed.add_field(name = 'Total Profit', value = f'{totalProf:,d}', inline = True)
 		embed.add_field(name = 'Games Played', value = f'{gamesPlayed}', inline = True)
 		embed.add_field(name = 'High Low Profit', value = f'{betProfit:,d}', inline = True)
