@@ -258,7 +258,7 @@ async def help(ctx):
 
 	await ctx.send(embed = embed)
 
-@client.command(aliases = ['games','movies','movie'])
+@client.command(aliases = ['games','movies','movie', 'poll', 'vote'])
 async def game(ctx, *, games):
 
 	#await ctx.channel.purge(limit=1) #Will remove the command message 

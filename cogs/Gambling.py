@@ -181,7 +181,7 @@ class Gambling(commands.Cog):
 
 			await ctx.send(embed = embed)
 
-	@commands.command(aliases = ['credit'])
+	@commands.command(aliases = ['credit', 'balance'])
 	async def credits(self, ctx):
 		author = ctx.message.author
 		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
