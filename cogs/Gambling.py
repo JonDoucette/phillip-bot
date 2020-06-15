@@ -10,7 +10,7 @@ DONE - Write the !bet command
 DONE - Add in the !bet command error format
 DONE - Come up with the !daily for credits
 SlotMachine
-Leaderboards
+DONE - Leaderboards
 Create a shop system: Crates for xp and credits
 Level system
 """
@@ -219,7 +219,7 @@ class Gambling(commands.Cog):
 
 		await ctx.send(embed = embed)
 
-	@commands.command(aliases = ['leaderboards', 'leader', 'lead'])
+	@commands.command(aliases = ['leaderboards', 'leader', 'lead', 'leaders'])
 	async def leaderboard(self, ctx):
 		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
@@ -258,6 +258,59 @@ class Gambling(commands.Cog):
 		embed.set_author(name = response)
 		await ctx.send(embed = embed)
 
+	@commands.command(aliases = ['loserboards', 'loser', 'lose', 'losers'])
+	async def loserboard(self, ctx):
+		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		sheet = ss['output']
+
+		response = ''
+		name = ''
+		names = []
+
+		creditList = sheet.getColumn(5)
+		creditList[0] = 0
+		removal = creditList.index('')
+		removal -= 1
+		del creditList[0]
+		del creditList[removal:] #Removes all of the blank credits from the list
+		print(creditList)
+
+		creditList = list(map(int, creditList)) #Converts all items in the list to integer
+
+		for i in range(5):
+			amount = min(creditList)
+			index = creditList.index(amount)
+			
+			print(f'Index: {index}')
+
+
+			for r in range(200):
+				#row = sheet.getRow(r+1)
+				row = sheet[5, (r+2)]
+				print(row)
+				if row in str(amount):
+					name = sheet[3, (r+2)]
+					
+					print(f'Row: {r + 2}')
+					
+					if name in names:
+						continue
+					else:
+						names.append(name)
+						break
+
+
+
+
+			response += f'{i+1}. {name:<10} - {amount:>10,d} credits\n'
+			index = creditList.index(amount)
+
+			del creditList[index]
+
+
+		embed = discord.Embed(color = 0xffff00)
+		embed.set_author(name = response)
+		await ctx.send(embed = embed)
 
 
 
