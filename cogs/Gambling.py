@@ -205,9 +205,9 @@ class Gambling(commands.Cog):
 			return 
 
 
-		slot1 = random.randint(0,10)
-		slot2 = random.randint(0,10)
-		slot3 = random.randint(0,10)
+		slot1 = random.randint(0,8)
+		slot2 = random.randint(0,8)
+		slot3 = random.randint(0,8)
 		payout = 0
 
 		embed = discord.Embed(color = 3066993)
@@ -226,44 +226,90 @@ class Gambling(commands.Cog):
 		embed.add_field(name = f'Slot | User: {author.name}', value = f'**---------------\n|{slotIcons[slot1]}|{slotIcons[slot2]}|{slotIcons[slot3]}|\n---------------\n---SPINNING---**', inline = False)
 		await message.edit(embed = embed)
 
+		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		sheet = ss['output']
+
+
 		if slotIcons[slot1] != slotIcons[slot2] and slotIcons[slot2] != slotIcons[slot3]:
 			payout = -1
 		elif slotIcons[slot1] == slotIcons[slot2] and slotIcons[slot1] == slotIcons[slot3]:
 			if slotIcons[slot1] == ':medal:':
+				medalWin = int(sheet[15, 2])
+				medalWin += 1
+				sheet[15,2] = medalWin
 				payout = 2.5
 			elif slotIcons[slot1] == ':100:':
+				medalWin = int(sheet[16, 2])
+				medalWin += 1
+				sheet[16,2] = medalWin
 				payout = 3
 			elif slotIcons[slot1] == ':dollar:':
+				medalWin = int(sheet[17, 2])
+				medalWin += 1
+				sheet[17,2] = medalWin
 				payout = 4
 			elif slotIcons[slot1] == ':moneybag:':
+				medalWin = int(sheet[18, 2])
+				medalWin += 1
+				sheet[18,2] = medalWin
 				payout = 7
 			elif slotIcons[slot1] == ':gem:':
+				medalWin = int(sheet[19, 2])
+				medalWin += 1
+				sheet[19,2] = medalWin
 				payout = 15
 		elif slotIcons[slot1] == slotIcons[slot2] and slotIcons[slot1] != slotIcons[slot3]:
 			if slotIcons[slot1] == ':medal:':
+				Win = int(sheet[15, 2])
+				Win += 1
+				sheet[15,2] = Win
 				payout = 0.5
 			elif slotIcons[slot1] == ':100:':
+				Win = int(sheet[16, 2])
+				Win += 1
+				sheet[16,2] = Win
 				payout = 2
 			elif slotIcons[slot1] == ':dollar:':
+				Win = int(sheet[17, 2])
+				Win += 1
+				sheet[17,2] = Win
 				payout = 2
 			elif slotIcons[slot1] == ':moneybag:':
+				Win = int(sheet[18, 2])
+				Win += 1
+				sheet[18,2] = Win
 				payout = 3.5
 			elif slotIcons[slot1] == ':gem:':
+				Win = int(sheet[19, 2])
+				Win += 1
+				sheet[19,2] = Win
 				payout = 7
 		elif slotIcons[slot1] != slotIcons[slot2] and slotIcons[slot2] == slotIcons[slot3]:
 			if slotIcons[slot2] == ':medal:':
+				Win = int(sheet[15, 2])
+				Win += 1
+				sheet[15,2] = Win
 				payout = 0.5
 			elif slotIcons[slot2] == ':100:':
+				Win = int(sheet[16, 2])
+				Win += 1
+				sheet[16,2] = Win
 				payout = 2
 			elif slotIcons[slot2] == ':dollar:':
+				Win = int(sheet[17, 2])
+				Win += 1
+				sheet[17,2] = Win
 				payout = 2
 			elif slotIcons[slot2] == ':moneybag:':
+				Win = int(sheet[18, 2])
+				Win += 1
+				sheet[18,2] = Win
 				payout = 3.5
 			elif slotIcons[slot2] == ':gem:':
+				Win = int(sheet[19, 2])
+				Win += 1
+				sheet[19,2] = Win
 				payout = 7
-
-		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
-		sheet = ss['output']
 
 		amount = int(amount)
 		location = sheet.getColumn(1).index(user)
