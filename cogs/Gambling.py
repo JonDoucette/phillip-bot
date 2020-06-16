@@ -439,7 +439,7 @@ class Gambling(commands.Cog):
 			return
 
 		if int(amount) > authorCredits:
-			await ctx.send(f'{author.mention}, you do not have sufficient credits.')
+			await ctx.send(f'{ctx.message.author.mention}, you do not have sufficient credits.')
 			return
 		if int(amount) > UCredits:
 			await ctx.send(f'{member.mention}, you do not have sufficient credits')
