@@ -172,6 +172,14 @@ async def tilted(ctx, member : discord.Member):
 			sheet[1, empty] = user
 			sheet[2, empty] = new
 			sheet[3, empty] = member.name
+			sheet[5, empty] = 5000
+			sheet[6, empty] = 0
+			sheet[7, empty] = 1
+			sheet[8, empty] = 0
+			sheet[9, empty] = 0
+			sheet[10, empty] = 0
+			sheet[11, empty] = 0
+			sheet[12, empty] = 0
 			
 
 		embed = discord.Embed(color = 0x607d8b, description = member.mention + ' was tilted by ' 
@@ -352,5 +360,5 @@ async def on_message(message):
 
 	await client.process_commands(message)
 
-client.run('NzE1ODExMjE3OTAxNjE3MTUy.XuT9Tg.dxEEEw2ULSx2lwLEmRWLzk_r7jg') #Phillip
-#client.run('NzIxMjI4MTM3NDMzNjYxNTIw.XuT73w.TQVGmTNPFRwR4jpPEZOKdORk2QU') #Test Boteroni
+#client.run('NzE1ODExMjE3OTAxNjE3MTUy.XuT9Tg.dxEEEw2ULSx2lwLEmRWLzk_r7jg') #Phillip
+client.run('NzIxMjI4MTM3NDMzNjYxNTIw.XuT73w.TQVGmTNPFRwR4jpPEZOKdORk2QU') #Test Boteroni

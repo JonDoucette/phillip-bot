@@ -10,15 +10,16 @@ from discord.ext import commands
 DONE - Write the !bet command
 DONE - Add in the !bet command error format
 DONE - Come up with the !daily for credits
-
-Done - SlotMachine
-
-!register command for new users, should make program run faster
-
+DONE - SlotMachine
+DONE - !register command for new users, should make program run faster
 DONE - Leaderboards
 Create a shop system: Crates for xp and credits
 Level system
+!give a user
+
 !lower command where you guess number lower than
+!gamble for help menu with gambling options
+!horse or snail
 
 Done - !search command to find 25 - 100 coins on ground
 Done - Stats with games played, overall profit and profit based on game
@@ -55,16 +56,6 @@ class Gambling(commands.Cog):
 	@commands.command()
 	@commands.cooldown(1, 15, commands.BucketType.user)
 	async def bet(self, ctx, amount = None, choice = None):
-		"""
-		COLUMNS:
-		1 - ID
-		2 - MMR
-		3 - Name
-		5 - Credits
-		6 - Crates
-		7 - EXP
-		8 - Level
-		"""
 
 		author = ctx.message.author
 
@@ -111,21 +102,11 @@ class Gambling(commands.Cog):
 			location = sheet.getColumn(1).index(user)
 			location += 1
 			credits = sheet[5, location]
-
-			if credits == '':
-				credits = STARTING_CREDITS
-			else:
-				credits = int(credits)
+			credits = int(credits)
 		#If the user doesn't exist yet
 		else:
-			empty = sheet.getColumn(1).index('')
-			location = empty + 1
-			sheet[1, location] = user
-			sheet[3, location] = author.name
-			credits = sheet[5, location] = STARTING_CREDITS
-			crates 	= sheet[6, location] = STARTING_CRATES
-			xp 		= sheet[7, location] = STARTING_EXP
-			level 	= sheet[8, location] = STARTING_LEVEL
+			await ctx.send('Please register first using `!register`.')
+			return
 		
 		amount = int(amount)
 
@@ -177,6 +158,7 @@ class Gambling(commands.Cog):
 			await ctx.send(embed = embed)
 
 	@commands.command(aliases = ['slots', 'slotmachine'])
+	@commands.cooldown(1, 10, commands.BucketType.user)
 	async def slot(self, ctx, amount = None):
 
 		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
@@ -193,9 +175,12 @@ class Gambling(commands.Cog):
 		user = author.id
 		user = str(user)
 
-		location = sheet.getColumn(1).index(user)
-		location += 1
-		credits = int(sheet[5, location])
+		if user in sheet.getColumn(1):
+			location = sheet.getColumn(1).index(user)
+			location += 1
+			credits = int(sheet[5, location])
+		else:
+			await ctx.send('Please register first using `!register`.')
 
 
 		if amount == None:
@@ -371,6 +356,36 @@ class Gambling(commands.Cog):
 			slotsWon += 1
 			sheet[14, 2] = slotsWon
 
+	@commands.command(aliases = ['registers', 'signup'])
+	async def register(self, ctx):
+		author = ctx.message.author
+		user = author.id
+		user = str(user)
+
+
+		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		sheet = ss['output']
+
+
+		#If the user exists
+		if user in sheet.getColumn(1):
+			await ctx.send('You have already been registered.')
+		#If the user doesn't exist yet
+		else:
+			empty = sheet.getColumn(1).index('')
+			location = empty + 1
+			sheet[1, location] = user
+			sheet[3, location] = author.name
+			sheet[5, location] = STARTING_CREDITS
+			sheet[6, location] = STARTING_CRATES
+			sheet[7, location] = STARTING_EXP
+			sheet[8, location] = STARTING_LEVEL
+			sheet[9, location] = 0
+			sheet[10, location] = 0
+			sheet[11, location] = 0
+			sheet[12, location] = 0
+			await ctx.send('You have successfully been registered!')
+
 	@commands.command(aliases = ['credit', 'balance'])
 	async def credits(self, ctx):
 		author = ctx.message.author
@@ -384,21 +399,10 @@ class Gambling(commands.Cog):
 			location = sheet.getColumn(1).index(user)
 			location += 1
 			credits = sheet[5, location]
-
-			if credits == '':
-				credits = STARTING_CREDITS
-			else:
-				credits = int(credits)
+			credits = int(credits)
 		#If the user doesn't exist yet
 		else:
-			empty = sheet.getColumn(1).index('')
-			location = empty + 1
-			sheet[1, location] = user
-			sheet[3, location] = author.name
-			credits = sheet[5, location] = STARTING_CREDITS
-			crates 	= sheet[6, location] = STARTING_CRATES
-			xp 		= sheet[7, location] = STARTING_EXP
-			level 	= sheet[8, location] = STARTING_LEVEL
+			await ctx.send('Please register first using `!register`.')
 
 		await ctx.send(author.mention + f', you have {credits:,d} credits.')
 
@@ -416,21 +420,10 @@ class Gambling(commands.Cog):
 			location = sheet.getColumn(1).index(user)
 			location += 1
 			credits = sheet[5, location]
-
-			if credits == '':
-				credits = STARTING_CREDITS
-			else:
-				credits = int(credits)
+			credits = int(credits)
 		#If the user doesn't exist yet
 		else:
-			empty = sheet.getColumn(1).index('')
-			location = empty + 1
-			sheet[1, location] = user
-			sheet[3, location] = author.name
-			credits = sheet[5, location] = STARTING_CREDITS
-			crates 	= sheet[6, location] = STARTING_CRATES
-			xp 		= sheet[7, location] = STARTING_EXP
-			level 	= sheet[8, location] = STARTING_LEVEL
+			await ctx.send('Please register first using `!register`.')
 
 		credits += DAILY_AMOUNT
 		sheet[5,location] = credits
@@ -453,21 +446,10 @@ class Gambling(commands.Cog):
 			location = sheet.getColumn(1).index(user)
 			location += 1
 			credits = sheet[5, location]
-
-			if credits == '':
-				credits = STARTING_CREDITS
-			else:
-				credits = int(credits)
+			credits = int(credits)
 		#If the user doesn't exist yet
 		else:
-			empty = sheet.getColumn(1).index('')
-			location = empty + 1
-			sheet[1, location] = user
-			sheet[3, location] = author.name
-			credits = sheet[5, location] = STARTING_CREDITS
-			crates 	= sheet[6, location] = STARTING_CRATES
-			xp 		= sheet[7, location] = STARTING_EXP
-			level 	= sheet[8, location] = STARTING_LEVEL
+			await ctx.send('Please register first using `!register`.')
 
 		print(credits)
 
@@ -481,6 +463,60 @@ class Gambling(commands.Cog):
 			embed = discord.Embed(color = 0xFF0000, description = 'You can only search with 25 credits or less.')
 
 		await ctx.send(embed = embed)
+
+	@commands.command()
+	async def give(self, ctx, member : discord.Member = None, amount = None):
+		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		sheet = ss['output']
+
+
+		if amount == None:
+			embed = discord.Embed(description = 'Please enter a valid bet amount')
+			await ctx.send(embed = embed)
+			return
+
+
+		amount = int(amount)
+		user = member.id
+		user = str(user)
+
+		author = ctx.message.author
+		author = author.id
+		author = str(author)
+
+		if author in sheet.getColumn(1):
+			location = sheet.getColumn(1).index(author)
+			location += 1
+			authorCredits = sheet[5, location]
+			authorCredits = int(authorCredits)
+		else:
+			await ctx.send(f'You have yet to register with `!register`.')
+			return
+
+		if user in sheet.getColumn(1):
+			ULocation = sheet.getColumn(1).index(user)
+			ULocation += 1
+			UCredits = sheet[5, ULocation]
+			UCredits = int(UCredits) 
+		else:
+			await ctx.send(f'{member.mention} has yet to register with `!register`.')
+			return
+
+		if int(amount) > authorCredits:
+			await ctx.send(f'You do not have that amount to give.')
+			return
+
+		UCredits += amount
+		authorCredits -= amount
+		sheet[5, ULocation] = UCredits
+		sheet[5, location] = authorCredits
+
+		await ctx.send(f'You gave {member.mention} {amount:,d} credits.')
+
+
+
+
+
 
 	@commands.command(aliases = ['leaderboards', 'leader', 'lead', 'leaders'])
 	async def leaderboard(self, ctx):
@@ -591,21 +627,10 @@ class Gambling(commands.Cog):
 			location = sheet.getColumn(1).index(user)
 			location += 1
 			credits = sheet[5, location]
-
-			if credits == '':
-				credits = STARTING_CREDITS
-			else:
-				credits = int(credits)
+			credits = int(credits)
 		#If the user doesn't exist yet
 		else:
-			empty = sheet.getColumn(1).index('')
-			location = empty + 1
-			sheet[1, location] = user
-			sheet[3, location] = author.name
-			credits = sheet[5, location] = STARTING_CREDITS
-			crates 	= sheet[6, location] = STARTING_CRATES
-			xp 		= sheet[7, location] = STARTING_EXP
-			level 	= sheet[8, location] = STARTING_LEVEL
+			await ctx.send('Please register first using `!register`.')
 
 		totalProf = int(sheet[9, location])
 		gamesPlayed = int(sheet[10, location])
@@ -630,12 +655,9 @@ class Gambling(commands.Cog):
 
 
 
-	### TO DO ###
+	#ERROR HANDLING
 	@bet.error
 	async def bet_error(self, ctx, error):
-		if isinstance(error, commands.MissingRequiredArgument):
-			embed = discord.Embed(color = 0x607d8b, description = 'Please @ a specific user.')
-			await ctx.send(embed = embed)
 		if isinstance(error, commands.CommandOnCooldown):
 			seconds = str(error).split()[-1]
 			seconds = int(seconds[:-4])
@@ -653,6 +675,19 @@ class Gambling(commands.Cog):
 
 			embed = discord.Embed(color = 0xFF0000)
 			embed.add_field(name = 'You already collected your daily', value = f'Next in **{h}:{m}:{s}**')
+
+			await ctx.send(embed = embed)
+
+	@slot.error
+	async def slot_error(self, ctx, error):
+		if isinstance(error, commands.CommandOnCooldown):
+			seconds = str(error).split()[-1]
+			seconds = int(seconds[:-4])
+			t = str(datetime.timedelta(seconds = seconds))
+			h, m, s = t.split(':')
+
+			embed = discord.Embed(color = 0xFF0000)
+			embed.add_field(name = 'You are going to fast.', value = f'Next in **{h}:{m}:{s}**')
 
 			await ctx.send(embed = embed)
 
