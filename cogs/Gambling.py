@@ -179,13 +179,13 @@ class Gambling(commands.Cog):
 	@commands.command(aliases = ['slots', 'slotmachine'])
 	async def slot(self, ctx, amount = None):
 
-		slotIcons = [':medal:',':medal:',':medal:',':100:',':100:', ':100:', ':dollar:',':dollar:', ':moneybag:',':moneybag:', ':gem:']
+		slotIcons = [':medal:',':medal:',':100:', ':100:', ':dollar:',':dollar:', ':moneybag:',':moneybag:', ':gem:']
 		author = ctx.message.author
 		user = author.id
 		user = str(user)
 
 		if amount == None:
-			embed = discord.Embed(color = 0x607d8b)
+			embed = discord.Embed(color = discord.Colour.orange())
 			embed.add_field(name = 'Help', value = 'Slot machine', inline = False)
 			embed.add_field(name = 'Winnings', value = ':medal::medal::grey_question: - **0.5x**\n\
 														:100::100::grey_question: - **2x**\n\
