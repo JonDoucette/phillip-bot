@@ -213,7 +213,7 @@ class Gambling(commands.Cog):
 		elif not amount.isdigit():
 			await ctx.send('Please enter a digit amount for your bet.')
 			return 
-		elif amount > credits:
+		elif int(amount) > credits:
 			await ctx.send('You do not have enough credits.')
 			return
 
