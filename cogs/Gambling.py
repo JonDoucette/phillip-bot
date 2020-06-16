@@ -2,6 +2,7 @@ import discord
 import ezsheets
 import random
 import datetime
+import time
 from discord.ext import commands
 
 """
@@ -10,20 +11,17 @@ DONE - Write the !bet command
 DONE - Add in the !bet command error format
 DONE - Come up with the !daily for credits
 
-TO DO NEXT - SlotMachine
+Done - SlotMachine
 
 !register command for new users, should make program run faster
 
 DONE - Leaderboards
 Create a shop system: Crates for xp and credits
 Level system
+!lower command where you guess number lower than
 
 Done - !search command to find 25 - 100 coins on ground
 Done - Stats with games played, overall profit and profit based on game
-
-
-
-!bet command and you go with the multiplier -NEED TO REWRUITE BET COMMAND FOR THIS I THINK
 
 """
 
@@ -51,9 +49,6 @@ class Gambling(commands.Cog):
 #	@commands.Cog.listener()
 #	async def on_message(self, message):
 #		await message.add_reaction('\u2753') #Question Mark Unicode
-
-
-
 
 
 	#Commands
@@ -181,6 +176,139 @@ class Gambling(commands.Cog):
 
 			await ctx.send(embed = embed)
 
+	@commands.command(aliases = ['slots', 'slotmachine'])
+	async def slot(self, ctx, amount = None):
+
+		slotIcons = [':medal:',':medal:',':medal:',':100:',':100:', ':100:', ':dollar:',':dollar:', ':moneybag:',':moneybag:', ':gem:']
+		author = ctx.message.author
+		user = author.id
+		user = str(user)
+
+		if amount == None:
+			embed = discord.Embed(color = 0x607d8b)
+			embed.add_field(name = 'Help', value = 'Slot machine', inline = False)
+			embed.add_field(name = 'Winnings', value = ':medal::medal::grey_question: - **0.5x**\n\
+														:100::100::grey_question: - **2x**\n\
+														:dollar::dollar::grey_question: - **2x**\n\
+														:medal::medal::medal: - **2.5x**\n\
+														:100::100::100: - **3x**\n\
+														:moneybag::moneybag::grey_question: - **3.5x**\n\
+														:dollar::dollar::dollar: - **4x***\n\
+														:gem::gem::grey_question: - **7x**\n\
+														:moneybag::moneybag::moneybag: - **7x**\n\
+														:gem::gem::gem: - **15x**', inline = False)
+			embed.add_field(name = 'Usage', value = '**!slots <amount>**')
+			await ctx.send(embed = embed)
+			return
+		elif not amount.isdigit():
+			await ctx.send('Please enter a digit amount for your bet.')
+			return 
+
+
+		slot1 = random.randint(0,10)
+		slot2 = random.randint(0,10)
+		slot3 = random.randint(0,10)
+		payout = 0
+
+		embed = discord.Embed(color = 3066993)
+		embed.add_field(name = f'Slot | User: {author.name}', value = f'**---------------\n|<a:slot:722306708273234002>|<a:slot:722306708273234002>|<a:slot:722306708273234002>|\n---------------\n---SPINNING---**', inline = False)
+		message = await ctx.send(embed = embed)
+		time.sleep(.75)
+		embed = discord.Embed(color = 3066993)
+		embed.add_field(name = f'Slot | User: {author.name}', value = f'**---------------\n|{slotIcons[slot1]}|<a:slot:722306708273234002>|<a:slot:722306708273234002>|\n---------------\n---SPINNING---**', inline = False)
+		await message.edit(embed = embed)
+		time.sleep(.75)
+		embed = discord.Embed(color = 3066993)
+		embed.add_field(name = f'Slot | User: {author.name}', value = f'**---------------\n|{slotIcons[slot1]}|{slotIcons[slot2]}|<a:slot:722306708273234002>|\n---------------\n---SPINNING---**', inline = False)
+		await message.edit(embed = embed)
+		time.sleep(.75)
+		embed = discord.Embed(color = 3066993)
+		embed.add_field(name = f'Slot | User: {author.name}', value = f'**---------------\n|{slotIcons[slot1]}|{slotIcons[slot2]}|{slotIcons[slot3]}|\n---------------\n---SPINNING---**', inline = False)
+		await message.edit(embed = embed)
+
+		if slotIcons[slot1] != slotIcons[slot2] and slotIcons[slot2] != slotIcons[slot3]:
+			payout = -1
+		elif slotIcons[slot1] == slotIcons[slot2] and slotIcons[slot1] == slotIcons[slot3]:
+			if slotIcons[slot1] == ':medal:':
+				payout = 2.5
+			elif slotIcons[slot1] == ':100:':
+				payout = 3
+			elif slotIcons[slot1] == ':dollar:':
+				payout = 4
+			elif slotIcons[slot1] == ':moneybag:':
+				payout = 7
+			elif slotIcons[slot1] == ':gem:':
+				payout = 15
+		elif slotIcons[slot1] == slotIcons[slot2] and slotIcons[slot1] != slotIcons[slot3]:
+			if slotIcons[slot1] == ':medal:':
+				payout = 0.5
+			elif slotIcons[slot1] == ':100:':
+				payout = 2
+			elif slotIcons[slot1] == ':dollar:':
+				payout = 2
+			elif slotIcons[slot1] == ':moneybag:':
+				payout = 3.5
+			elif slotIcons[slot1] == ':gem:':
+				payout = 7
+		elif slotIcons[slot1] != slotIcons[slot2] and slotIcons[slot2] == slotIcons[slot3]:
+			if slotIcons[slot2] == ':medal:':
+				payout = 0.5
+			elif slotIcons[slot2] == ':100:':
+				payout = 2
+			elif slotIcons[slot2] == ':dollar:':
+				payout = 2
+			elif slotIcons[slot2] == ':moneybag:':
+				payout = 3.5
+			elif slotIcons[slot2] == ':gem:':
+				payout = 7
+
+		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		sheet = ss['output']
+
+		amount = int(amount)
+		location = sheet.getColumn(1).index(user)
+		location += 1
+		credits = int(sheet[5, location])
+
+		profit = (amount*payout)
+		credits = credits + profit
+		sheet[5, location] = credits
+
+		if payout != -1:
+			result = discord.Embed(color = 3066993)
+			result.add_field(name = f'Slot | User: {author.name}', value = f'**---------------\n|{slotIcons[slot1]}|{slotIcons[slot2]}|{slotIcons[slot3]}|\n---------------\n---YOU WON---**', inline = False)
+		else:
+			result = discord.Embed(color = 0xFF0000)
+			result.add_field(name = f'Slot | User: {author.name}', value = f'**---------------\n|{slotIcons[slot1]}|{slotIcons[slot2]}|{slotIcons[slot3]}|\n---------------\n---YOU LOST---**', inline = False)
+
+		result.add_field(name = 'Profit', value = f'**{profit:,.0f}** credits', inline = True)
+		result.add_field(name = 'Credits', value = f'You have {credits:,.0f} credits', inline = True)
+
+		await message.edit(embed = result)
+
+		#Adds data to the statistics
+		totalProf = int(sheet[9, location])
+		totalProf += profit
+		sheet[9, location] = totalProf
+
+		gamesPlayed = int(sheet[10, location])
+		gamesPlayed += 1
+		sheet[10, location] = gamesPlayed
+
+		slotProfit = int(sheet[12, location])
+		slotProfit += profit
+		sheet[12, location] = slotProfit
+
+		#For balancing purposes in the future
+		slotsPlayed = int(sheet[13, 2])
+		slotsPlayed += 1
+		sheet[13, 2] = slotsPlayed
+
+		if payout != -1:
+			slotsWon = int(sheet[14, 2])
+			slotsWon += 1
+			sheet[14, 2] = slotsWon
+
 	@commands.command(aliases = ['credit', 'balance'])
 	async def credits(self, ctx):
 		author = ctx.message.author
@@ -291,8 +419,6 @@ class Gambling(commands.Cog):
 			embed = discord.Embed(color = 0xFF0000, description = 'You can only search with 25 credits or less.')
 
 		await ctx.send(embed = embed)
-
-
 
 	@commands.command(aliases = ['leaderboards', 'leader', 'lead', 'leaders'])
 	async def leaderboard(self, ctx):
@@ -422,11 +548,13 @@ class Gambling(commands.Cog):
 		totalProf = int(sheet[9, location])
 		gamesPlayed = int(sheet[10, location])
 		betProfit = int(sheet[11, location])
+		slotProfit = int(sheet[12, location]) 
 
 		embed = discord.Embed(color = 0xffff00, title = f'Stats for: {author.name}')
 		embed.add_field(name = 'Total Profit', value = f'{totalProf:,d}', inline = True)
 		embed.add_field(name = 'Games Played', value = f'{gamesPlayed}', inline = True)
 		embed.add_field(name = 'High Low Profit', value = f'{betProfit:,d}', inline = True)
+		embed.add_field(name = 'Slots Profit', value = f'{slotProfit:,d}', inline = True)
 		embed.set_footer(text = f'You currently have {credits:,d} credits.')
 
 		await ctx.send(embed = embed)
