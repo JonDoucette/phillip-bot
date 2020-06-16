@@ -3,6 +3,7 @@ import ezsheets
 import random
 import datetime
 import time
+import asyncio
 from discord.ext import commands
 
 """
@@ -15,7 +16,7 @@ DONE - !register command for new users, should make program run faster
 DONE - Leaderboards
 Create a shop system: Crates for xp and credits
 Level system
-!give a user
+DONE - !give a user
 
 !lower command where you guess number lower than
 !gamble for help menu with gambling options
@@ -158,7 +159,7 @@ class Gambling(commands.Cog):
 			await ctx.send(embed = embed)
 
 	@commands.command(aliases = ['slots', 'slotmachine'])
-	@commands.cooldown(1, 10, commands.BucketType.user)
+	@commands.cooldown(1, 7, commands.BucketType.user)
 	async def slot(self, ctx, amount = None):
 
 		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
@@ -356,6 +357,153 @@ class Gambling(commands.Cog):
 			slotsWon += 1
 			sheet[14, 2] = slotsWon
 
+	@commands.command(aliases = ['horseduels'])
+	async def horseduel(self, ctx, member : discord.Member = None, amount = None):
+		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		sheet = ss['output']
+
+		global user
+		user = member
+		print(member)
+		print(amount)
+
+		def duel_acceptance(m):
+			if m.author.id == member.id:
+				if m.content.lower()[0] == 'y' or m.content.lower()[0] == 'n':
+					return True
+				else:
+					return False
+			else:
+				return False	
+
+		if member == None and amount == None:
+			embed = discord.Embed(color = discord.Colour.orange())
+			embed.add_field(name = 'Help', value = 'Race someone in a horse race', inline = False)
+			embed.add_field(name = 'Payout', value ='Winner takes all', inline = False)
+			embed.add_field(name = 'Usage', value = '**!horseduel @player <amount>**')
+			await ctx.send(embed = embed)
+			return
+
+		elif member == None:
+			embed = discord.Embed('Please @ a specific user')
+			await ctx.send(embed = embed)
+			return
+		elif amount == None:
+			embed = discord.Embed(description = 'Please enter a valid amount to bet')
+			await ctx.send(embed = embed)
+			return
+
+
+		prompt = discord.Embed(color = 3066993, description = f'{member.name}, do you accept?\n**Yes** or **No**')
+		await ctx.send(embed = prompt)
+
+		try:
+			msg = await self.client.wait_for('message', check=duel_acceptance, timeout=15)
+		except Exception:
+			return await ctx.send(f'Sorry, {member.name} took too long to answer. The race is off.')
+
+		choice = msg.content[0]
+		if choice.lower() != 'y' and choice.lower() != 'n':
+			await ctx.send('Invalid acceptance. Next time use `yes` or `no`.')
+			return
+		elif choice.lower() == 'n':
+			amount = int(amount)
+			await ctx.send(f'{member.name} has declined the horse race for {amount:,d} credits.')
+			return
+
+
+		amount = int(amount)
+		user = member.id
+		user = str(user)
+
+		author = ctx.message.author
+		author = author.id
+		author = str(author)
+
+		if author in sheet.getColumn(1):
+			location = sheet.getColumn(1).index(author)
+			location += 1
+			authorCredits = sheet[5, location]
+			authorCredits = int(authorCredits)
+		else:
+			await ctx.send(f'You have yet to register with `!register`.')
+			return
+
+		if user in sheet.getColumn(1):
+			ULocation = sheet.getColumn(1).index(user)
+			ULocation += 1
+			UCredits = sheet[5, ULocation]
+			UCredits = int(UCredits) 
+		else:
+			await ctx.send(f'{member.mention} has yet to register with `!register`.')
+			return
+
+		if int(amount) > authorCredits:
+			await ctx.send(f'{author.mention}, you do not have sufficient credits.')
+			return
+		if int(amount) > UCredits:
+			await ctx.send(f'{member.mention}, you do not have sufficient credits')
+			return
+
+
+		horse = '🏇'
+		flag = ':checkered_flag:'
+		horse_track1 = ' - - - - - - - - - - '
+		horse_track2 = ' - - - - - - - - - - '
+
+		horse = discord.Embed(color = 3066993)
+		horse.add_field(name = f'Horse Duel | {ctx.message.author.name} vs. {member.name}', value = f'{flag}{horse_track1}🏇 **{ctx.message.author.name}**\n{flag}{horse_track2}🏇 **{member.name}**')
+
+		race = 	await ctx.send(embed = horse)
+
+		while horse_track1 != '' and horse_track2 != '':
+			time.sleep(1.5)
+			horse1 = random.randint(0,2) * 2
+			horse2 = random.randint(0,2) * 2
+
+			if horse1 != 0:
+				horse_track1 = horse_track1[:-horse1]
+			if horse2 != 0:
+				horse_track2 = horse_track2[:-horse2]
+			embed = discord.Embed(color = 3066993)
+			embed.add_field(name = f'Horse Duel | {ctx.message.author.name} vs. {member.name}', value = f'{flag}{horse_track1}🏇 **{ctx.message.author.name}**\n{flag}{horse_track2}🏇 **{member.name}**')
+			await race.edit(embed = embed)
+
+		if horse_track1 == '' and horse_track2 == '':
+			winner = None
+			embed.add_field(name = '-------------------------------', value = f'It was a Tie!', inline = False)
+			embed.add_field(name = 'Profit', value = f'**0** credits', inline = False)
+			race.edit(embed = embed)
+
+
+		if horse_track1 == '':
+			winner = ctx.message.author.mention
+			authorCredits += amount
+			UCredits -= amount
+			sheet[5, location] = authorCredits
+			sheet[5, ULocation] = UCredits
+		else:
+			winner = member.mention
+			authorCredits -= amount
+			UCredits += amount
+			sheet[5, location] = authorCredits
+			sheet[5, ULocation] = UCredits
+
+
+		embed.add_field(name = '-------------------------------', value = f'{winner} Won!', inline = False)
+		embed.add_field(name = 'Profit', value = f'**{amount}** credits', inline = False)
+
+		await race.edit(embed = embed)
+
+
+
+
+
+
+
+
+
+
 	@commands.command(aliases = ['registers', 'signup'])
 	async def register(self, ctx):
 		author = ctx.message.author
@@ -469,9 +617,17 @@ class Gambling(commands.Cog):
 		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
 
+		if member == None and amount == None:
+			embed = discord.Embed(color = 0x607d8b)
+			embed.add_field(name = 'Help', value = 'Give a player some of your credits', inline = False)
+			embed.add_field(name = 'Usage', value = '**!give @player <amount>**')
 
-		if amount == None:
-			embed = discord.Embed(description = 'Please enter a valid bet amount')
+		elif member == None or member.isdigit():
+			embed = discord.Embed('Please @ a specific user')
+			await ctx.send(embed = embed)
+			return
+		elif amount == None:
+			embed = discord.Embed(description = 'Please enter a valid amount to give')
 			await ctx.send(embed = embed)
 			return
 
@@ -511,7 +667,10 @@ class Gambling(commands.Cog):
 		sheet[5, ULocation] = UCredits
 		sheet[5, location] = authorCredits
 
-		await ctx.send(f'You gave {member.mention} {amount:,d} credits.')
+
+		embed = discord.Embed(description = f'You gave {member.mention} {amount:,d} credits.')
+
+		await ctx.send(embed = embed)
 
 
 
