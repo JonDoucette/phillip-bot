@@ -179,10 +179,20 @@ class Gambling(commands.Cog):
 	@commands.command(aliases = ['slots', 'slotmachine'])
 	async def slot(self, ctx, amount = None):
 
+		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		sheet = ss['output']
+
+
+
 		slotIcons = [':medal:',':medal:',':100:', ':100:', ':dollar:',':dollar:', ':moneybag:',':moneybag:', ':gem:']
 		author = ctx.message.author
 		user = author.id
 		user = str(user)
+
+		location = sheet.getColumn(1).index(user)
+		location += 1
+		credits = int(sheet[5, location])
+
 
 		if amount == None:
 			embed = discord.Embed(color = discord.Colour.orange())
@@ -193,7 +203,7 @@ class Gambling(commands.Cog):
 														:medal::medal::medal: - **2.5x**\n\
 														:100::100::100: - **3x**\n\
 														:moneybag::moneybag::grey_question: - **3.5x**\n\
-														:dollar::dollar::dollar: - **4x***\n\
+														:dollar::dollar::dollar: - **4x**\n\
 														:gem::gem::grey_question: - **7x**\n\
 														:moneybag::moneybag::moneybag: - **7x**\n\
 														:gem::gem::gem: - **15x**', inline = False)
@@ -203,6 +213,9 @@ class Gambling(commands.Cog):
 		elif not amount.isdigit():
 			await ctx.send('Please enter a digit amount for your bet.')
 			return 
+		elif amount > credits:
+			await ctx.send('You do not have enough credits.')
+			return
 
 
 		slot1 = random.randint(0,8)
@@ -226,8 +239,7 @@ class Gambling(commands.Cog):
 		embed.add_field(name = f'Slot | User: {author.name}', value = f'**---------------\n|{slotIcons[slot1]}|{slotIcons[slot2]}|{slotIcons[slot3]}|\n---------------\n---SPINNING---**', inline = False)
 		await message.edit(embed = embed)
 
-		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
-		sheet = ss['output']
+
 
 
 		if slotIcons[slot1] != slotIcons[slot2] and slotIcons[slot2] != slotIcons[slot3]:
@@ -316,8 +328,8 @@ class Gambling(commands.Cog):
 		location += 1
 		credits = int(sheet[5, location])
 
-		profit = (amount*payout)
-		credits = credits + profit
+		profit = int(amount*payout)
+		credits = int(credits + profit)
 		sheet[5, location] = credits
 
 		if payout != -1:
