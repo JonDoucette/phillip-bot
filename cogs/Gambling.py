@@ -476,7 +476,7 @@ class Gambling(commands.Cog):
 			race.edit(embed = embed)
 
 
-		if horse_track1 == '':
+		elif horse_track1 == '':
 			winner = ctx.message.author.mention
 			authorCredits += amount
 			UCredits -= amount
