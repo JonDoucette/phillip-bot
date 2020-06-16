@@ -184,7 +184,11 @@ class Gambling(commands.Cog):
 
 
 
-		slotIcons = [':medal:',':medal:',':100:', ':100:', ':dollar:',':dollar:', ':moneybag:',':moneybag:', ':gem:']
+		slotIcons = [':medal:',':medal:',':medal:',':medal:',':medal:',':medal:',':medal:',':medal:',':medal:',':medal:',':medal:',':medal:',':medal:',':medal:',':medal:',':medal:',':medal:',':medal:',':medal:',':medal:',\
+		':100:', ':100:',':100:', ':100:',':100:', ':100:',':100:', ':100:',':100:', ':100:',':100:', ':100:',':100:', ':100:',':100:', ':100:',':100:', ':100:',\
+		':dollar:',':dollar:',':dollar:',':dollar:',':dollar:',':dollar:',':dollar:',':dollar:',':dollar:',':dollar:',':dollar:',':dollar:',':dollar:',':dollar:',\
+		':moneybag:',':moneybag:',':moneybag:',':moneybag:',':moneybag:',':moneybag:',':moneybag:',':moneybag:',':moneybag:',':moneybag:',':moneybag:',':moneybag:',\
+		':gem:',':gem:',':gem:',':gem:',':gem:',':gem:',':gem:']
 		author = ctx.message.author
 		user = author.id
 		user = str(user)
@@ -218,9 +222,9 @@ class Gambling(commands.Cog):
 			return
 
 
-		slot1 = random.randint(0,8)
-		slot2 = random.randint(0,8)
-		slot3 = random.randint(0,8)
+		slot1 = random.randint(0,59)
+		slot2 = random.randint(0,59)
+		slot3 = random.randint(0,59)
 		payout = 0
 
 		embed = discord.Embed(color = 3066993)
