@@ -255,7 +255,6 @@ async def help(ctx):
 	fields = [('`!quote`', 'Pulls a quote from the Mind-Break-Book', False),
 			  ('`!update`', 'Last time the bot was updated', False),
 			  ('`!game` or `!games` or `!movies`', "Enter games after command to create a poll\n Place a space between each game like:\n `!game Valorant League TTT`", False),
-			  ('`!bet <amount> <choice>`', 'Guess if number is high or low\n (low = 1-5, high = 6-10)', False),
 			  ('`!agents`', 'Picks Valorant Agents for the user to play \n Place a space between each user like: \n`!agents @user1 @user2` ', False),
 			  ('`!tilted`, `!untilted` or `!clearTilted`', '*Note: For Administrators only* \n Drops/Increases a users discord MMR randomly by 0 to 250, at 0 MMR they are kicked.', False),
 			  ('`!creator`', 'Lists the creator of the bot', False)]

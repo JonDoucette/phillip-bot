@@ -17,15 +17,17 @@ DONE - Leaderboards
 Create a shop system: Crates for xp and credits
 Level system
 DONE - !give a user
+DONE - !gamble for help menu with gambling options
 
-!lower command where you guess number lower than
-!gamble for help menu with gambling options
-!horse or snail
+!horse or snail - out of 5, 5x payout
 
 Done - !search command to find 25 - 100 coins on ground
 Done - Stats with games played, overall profit and profit based on game
+!lower command where you guess number lower than
 
 """
+
+cooldowns = {}
 
 STARTING_CREDITS = 5000
 STARTING_CRATES = 0
@@ -37,6 +39,35 @@ BET_PAYOUT = 2
 
 
 
+def level_checker(user):
+	ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+	sheet = ss['output']
+
+	location = sheet.getColumn(1).index(user)
+	location += 1
+
+	name = str(sheet[3, location])
+
+	gamesPlayed = int(sheet[10, location])
+	if gamesPlayed % 30 == 0:
+		print('Level up')
+		level = int(gamesPlayed / 30)
+		if level > 50:
+			print('Max Level achieved')
+			return False
+		else:
+			sheet[8, location] = level
+			embed = discord.Embed(color = 0xAC6AFF, description = f'{name} has leveled up to Level {level}!')
+			return embed
+
+	else:
+		return False
+
+
+
+
+	response = str(number)
+	return response
 
 class Gambling(commands.Cog):
 
@@ -51,6 +82,7 @@ class Gambling(commands.Cog):
 #	@commands.Cog.listener()
 #	async def on_message(self, message):
 #		await message.add_reaction('\u2753') #Question Mark Unicode
+
 
 
 	#Commands
@@ -125,8 +157,9 @@ class Gambling(commands.Cog):
 				profit = amount
 				credits += profit
 				sheet[5, location] = credits
+				level = sheet[8, location]
 				
-				embed = discord.Embed(color = 3066993, title = f'User: {author.name}')
+				embed = discord.Embed(color = 3066993, title = f'User: {author.name} | Level: {level}')
 				embed.add_field(name='Correct!', value = f'Number was **{dice}**', inline = True)
 				embed.add_field(name='Profit', value = f'**{profit:,d}** credits', inline = True)
 				embed.add_field(name='Credits', value = f'You have {credits:,d} credits', inline = False)
@@ -136,10 +169,11 @@ class Gambling(commands.Cog):
 				credits += profit
 				sheet[5, location] = credits
 
-				embed = discord.Embed(color = 0xFF0000, title = f'User: {author.name}')
+				embed = discord.Embed(color = 0xFF0000, title = f'User: {author.name} | Level: {level}')
 				embed.add_field(name='Incorrect!', value = f'Number was **{dice}**', inline = True)
 				embed.add_field(name='Profit', value = f'**{profit:,d}** credits', inline = True)
 				embed.add_field(name='Credits', value = f'You have {credits:,d} credits', inline = False)
+
 
 			#Adds data to the statistics
 			totalProf = int(sheet[9, location])
@@ -154,9 +188,15 @@ class Gambling(commands.Cog):
 			highlowProfit += profit
 			sheet[11, location] = highlowProfit
 
-
-
 			await ctx.send(embed = embed)
+
+			response = level_checker(user)
+			if response != False:
+				await ctx.send(embed = response)
+
+
+
+
 
 	@commands.command(aliases = ['slots', 'slotmachine'])
 	@commands.cooldown(1, 7, commands.BucketType.user)
@@ -180,6 +220,7 @@ class Gambling(commands.Cog):
 			location = sheet.getColumn(1).index(user)
 			location += 1
 			credits = int(sheet[5, location])
+			level = int(sheet[8, location])
 		else:
 			await ctx.send('Please register first using `!register`.')
 
@@ -214,19 +255,19 @@ class Gambling(commands.Cog):
 		payout = 0
 
 		embed = discord.Embed(color = 3066993)
-		embed.add_field(name = f'Slot | User: {author.name}', value = f'**---------------\n|<a:slot:722306708273234002>|<a:slot:722306708273234002>|<a:slot:722306708273234002>|\n---------------\n---SPINNING---**', inline = False)
+		embed.add_field(name = f'Slot | User: {author.name} | Level: {level}', value = f'**---------------\n|<a:slot:722306708273234002>|<a:slot:722306708273234002>|<a:slot:722306708273234002>|\n---------------\n---SPINNING---**', inline = False)
 		message = await ctx.send(embed = embed)
 		time.sleep(.75)
 		embed = discord.Embed(color = 3066993)
-		embed.add_field(name = f'Slot | User: {author.name}', value = f'**---------------\n|{slotIcons[slot1]}|<a:slot:722306708273234002>|<a:slot:722306708273234002>|\n---------------\n---SPINNING---**', inline = False)
+		embed.add_field(name = f'Slot | User: {author.name} | Level: {level}', value = f'**---------------\n|{slotIcons[slot1]}|<a:slot:722306708273234002>|<a:slot:722306708273234002>|\n---------------\n---SPINNING---**', inline = False)
 		await message.edit(embed = embed)
 		time.sleep(.75)
 		embed = discord.Embed(color = 3066993)
-		embed.add_field(name = f'Slot | User: {author.name}', value = f'**---------------\n|{slotIcons[slot1]}|{slotIcons[slot2]}|<a:slot:722306708273234002>|\n---------------\n---SPINNING---**', inline = False)
+		embed.add_field(name = f'Slot | User: {author.name} | Level: {level}', value = f'**---------------\n|{slotIcons[slot1]}|{slotIcons[slot2]}|<a:slot:722306708273234002>|\n---------------\n---SPINNING---**', inline = False)
 		await message.edit(embed = embed)
 		time.sleep(.75)
 		embed = discord.Embed(color = 3066993)
-		embed.add_field(name = f'Slot | User: {author.name}', value = f'**---------------\n|{slotIcons[slot1]}|{slotIcons[slot2]}|{slotIcons[slot3]}|\n---------------\n---SPINNING---**', inline = False)
+		embed.add_field(name = f'Slot | User: {author.name} | Level: {level}', value = f'**---------------\n|{slotIcons[slot1]}|{slotIcons[slot2]}|{slotIcons[slot3]}|\n---------------\n---SPINNING---**', inline = False)
 		await message.edit(embed = embed)
 
 
@@ -324,10 +365,10 @@ class Gambling(commands.Cog):
 
 		if payout != -1:
 			result = discord.Embed(color = 3066993)
-			result.add_field(name = f'Slot | User: {author.name}', value = f'**---------------\n|{slotIcons[slot1]}|{slotIcons[slot2]}|{slotIcons[slot3]}|\n---------------\n---YOU WON---**', inline = False)
+			result.add_field(name = f'Slot | User: {author.name} | Level: {level}', value = f'**---------------\n|{slotIcons[slot1]}|{slotIcons[slot2]}|{slotIcons[slot3]}|\n---------------\n---YOU WON---**', inline = False)
 		else:
 			result = discord.Embed(color = 0xFF0000)
-			result.add_field(name = f'Slot | User: {author.name}', value = f'**---------------\n|{slotIcons[slot1]}|{slotIcons[slot2]}|{slotIcons[slot3]}|\n---------------\n---YOU LOST---**', inline = False)
+			result.add_field(name = f'Slot | User: {author.name} | Level: {level}', value = f'**---------------\n|{slotIcons[slot1]}|{slotIcons[slot2]}|{slotIcons[slot3]}|\n---------------\n---YOU LOST---**', inline = False)
 
 		result.add_field(name = 'Profit', value = f'**{profit:,.0f}** credits', inline = True)
 		result.add_field(name = 'Credits', value = f'You have {credits:,.0f} credits', inline = True)
@@ -357,7 +398,13 @@ class Gambling(commands.Cog):
 			slotsWon += 1
 			sheet[14, 2] = slotsWon
 
+		response = level_checker(user)
+		if response != False:
+			await ctx.send(embed = response)
+
+
 	@commands.command(aliases = ['horseduels'])
+	@commands.cooldown(1, 10, commands.BucketType.user)
 	async def horseduel(self, ctx, member : discord.Member = None, amount = None):
 		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
@@ -496,8 +543,46 @@ class Gambling(commands.Cog):
 		await race.edit(embed = embed)
 
 
+		#MISSING GAMES PLAYED
 
 
+		response = level_checker(author)
+		if response != False:
+			await ctx.send(embed = response)
+
+		response = level_checker(user)
+		if response != False:
+			await ctx.send(embed = response)
+
+
+
+	"""
+	@commands.command(aliases = ['cooldowns'])
+	async def cooldown(self, ctx):
+		global cooldowns
+
+		print(cooldowns)
+
+		#Time to be completed
+		timer = cooldowns[str(ctx.author.id)] #This is the future time, the 24 hours
+
+		print(timer)
+		print(datetime.datetime.now())
+
+		timer = timer - datetime.datetime.now() 
+
+		print(timer)
+		print(str(timer))
+
+		if str(timer)[0] == '-': #Finds if the cooldown has already been completed
+			timer = 'Done'
+
+
+
+
+		print(f'Your cooldown is {timer}')
+
+"""
 
 
 
@@ -579,6 +664,15 @@ class Gambling(commands.Cog):
 		embed = discord.Embed(color = 3066993)
 		embed.add_field(name = f'You got {DAILY_AMOUNT:,d} credits', value = f'You have {credits:,d} credits', inline = False)
 
+		"""
+		#Cooldown function for viewing cooldowns
+
+		global cooldowns
+		now = datetime.datetime.now()#This is the current time
+		future = now + datetime.timedelta(seconds=30)#Add 24 hours to the time, getting time next value can be completed
+
+		cooldowns[str(ctx.author.id)] = future
+		"""
 		await ctx.send(embed = embed)
 
 	@commands.command()
@@ -793,17 +887,71 @@ class Gambling(commands.Cog):
 
 		totalProf = int(sheet[9, location])
 		gamesPlayed = int(sheet[10, location])
+		level = int(sheet[8, location])
 		betProfit = int(sheet[11, location])
 		slotProfit = int(sheet[12, location]) 
 
 		embed = discord.Embed(color = 0xffff00, title = f'Stats for: {author.name}')
 		embed.add_field(name = 'Total Profit', value = f'{totalProf:,d}', inline = True)
 		embed.add_field(name = 'Games Played', value = f'{gamesPlayed}', inline = True)
+		embed.add_field(name = 'Level', value =f'{level}', inline = True)
 		embed.add_field(name = 'High Low Profit', value = f'{betProfit:,d}', inline = True)
 		embed.add_field(name = 'Slots Profit', value = f'{slotProfit:,d}', inline = True)
 		embed.set_footer(text = f'You currently have {credits:,d} credits.')
 
 		await ctx.send(embed = embed)
+
+	@commands.command(aliases =['gambling', 'gambler'])
+	async def gamble(self, ctx):
+
+	#Sends these privately to the user
+	#author = ctx.message.author
+	#await author.send(embed = embed)
+
+		embed = discord.Embed(
+		colour = discord.Colour.orange(),
+		title = 'Gambling Help',
+		description = 'Get the highest credit amount in the server or buy some cool items from the shop!'
+		)
+
+		fields = [(':game_die: Games :game_die:', '`!bet`, `!slots`, `!horseduel`', False),
+			  (':gear: Other :gear:', '`!register`, `!credits`, `!daily`, `!search`, `!give`, `!leaderboard`, `!loserboard`, `!stats`', False)]
+
+		for name, value, inline in fields:
+			embed.add_field(name=name, value=value, inline = inline)
+
+
+		await ctx.send(embed = embed)
+
+	@commands.command(aliases =['names', 'change'])
+	async def name(self, ctx, new = None):
+		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		sheet = ss['output']
+
+		if new == None: #Help men
+			embed = discord.Embed(color = discord.Colour.orange())
+			embed.add_field(name = 'Help', value = 'Changes the name that the bot calls you.', inline = False)
+			embed.add_field(name = 'Usage', value = '**!name <name>**', inline = False)
+
+		else:
+			if str(ctx.author.id) in sheet.getColumn(1):
+				location = sheet.getColumn(1).index(str(ctx.author.id))
+				location += 1
+				credits = sheet[5, location]
+				credits = int(credits)
+			#If the user doesn't exist yet
+			else:
+				await ctx.send('Please register first using `!register`.')
+				return
+
+			sheet[3, location] = new
+			embed = discord.Embed(color = discord.Colour.orange(), description = f'Your name has been changed in the bots records to {new}.')
+			
+		
+		await ctx.send(embed = embed)
+
+
+
 
 
 
