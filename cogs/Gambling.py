@@ -249,9 +249,9 @@ class Gambling(commands.Cog):
 			return
 
 
-		slot1 = random.randint(0,59)
-		slot2 = random.randint(0,59)
-		slot3 = random.randint(0,59)
+		slot1 = random.randint(0,70)
+		slot2 = random.randint(0,70)
+		slot3 = random.randint(0,70)
 		payout = 0
 
 		embed = discord.Embed(color = 3066993)
