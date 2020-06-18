@@ -684,7 +684,7 @@ class Gambling(commands.Cog):
 
 		timer = True
 
-		prompt = discord.Embed(color = 3066993, description = f'{ctx.author.name}, has started a horse race for {amount:,d} credits!\n To join enter: **Join**')
+		prompt = discord.Embed(color = 3066993, description = f'{ctx.author.name} has started a horse race for {amount:,d} credits!\n To join enter: **Join**')
 		prompt.set_footer(text = 'Maximum of 5 players | Uneligible players will not be able to join')
 		await ctx.send(embed = prompt)
 
