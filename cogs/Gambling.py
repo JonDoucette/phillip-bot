@@ -622,11 +622,13 @@ class Gambling(commands.Cog):
 			embed.add_field(name = 'Usage', value = '**!horse <amount>**')
 			await ctx.send(embed = embed)
 			return
-		elif not isinstance(amount, int):
+		elif not amount.isdigit():
+			print('This one')
 			embed = discord.Embed(description = 'Please enter a valid amount to bet')
 			await ctx.send(embed = embed)
 			return
 		elif int(amount) < 0:
+			print('This one1')
 			embed = discord.Embed(description = 'Please enter a valid amount to bet')
 			await ctx.send(embed = embed)
 			return
@@ -690,7 +692,7 @@ class Gambling(commands.Cog):
 			try:
 				msg = await self.client.wait_for('message', check=duel_acceptance, timeout=10)
 				await ctx.send('You have been added to the race')
-			except TimeoutError:
+			except Exception:
 				timer = False
 				
 
