@@ -24,10 +24,9 @@ reactId = 0
 
 @client.event
 async def on_ready():
-	await client.change_presence(status = discord.Status.online, activity = discord.Game('Give Jon Suggestions'))
-
-
 	print('Bot is ready')
+	return await client.change_presence(activity = discord.Activity(type=1, name = 'Give Jon Suggestions', url = 'https://twitch.tv/twitch'))
+
 
 
 #Method for obtaining random quote from JSON file
@@ -72,7 +71,7 @@ async def quote(ctx):
 
 @client.command()
 async def update(ctx):
-	embed = discord.Embed(color = 0x607d8b, description = 'Last updated on 06-09-2020')
+	embed = discord.Embed(color = 0x607d8b, description = 'Last updated on 06-18-2020')
 	await ctx.send(embed = embed)
 
 @client.command()
@@ -254,9 +253,10 @@ async def help(ctx):
 
 	fields = [('`!quote`', 'Pulls a quote from the Mind-Break-Book', False),
 			  ('`!update`', 'Last time the bot was updated', False),
-			  ('`!game` or `!games` or `!movies`', "Enter games after command to create a poll\n Place a space between each game like:\n `!game Valorant League TTT`", False),
+			  ('`!game` or `!vote` or `!movies`', "Enter games after command to create a poll\n Place a space between each game like:\n `!game Valorant League TTT`", False),
 			  ('`!agents`', 'Picks Valorant Agents for the user to play \n Place a space between each user like: \n`!agents @user1 @user2` ', False),
-			  ('`!tilted`, `!untilted` or `!clearTilted`', '*Note: For Administrators only* \n Drops/Increases a users discord MMR randomly by 0 to 250, at 0 MMR they are kicked.', False),
+			  ('`!tilted` `!untilted` or `!clearTilted`', '*Note: For Administrators only* \n Drops/Increases a users discord MMR randomly by 0 to 250, at 0 MMR they are kicked.', False),
+			  ('`!gamble`', 'Help menu for all gambling commands.', False),
 			  ('`!creator`', 'Lists the creator of the bot', False)]
 
 	for name, value, inline in fields:
@@ -359,5 +359,5 @@ async def on_message(message):
 
 	await client.process_commands(message)
 
-client.run('NzE1ODExMjE3OTAxNjE3MTUy.XuT9Tg.dxEEEw2ULSx2lwLEmRWLzk_r7jg') #Phillip
-#client.run('NzIxMjI4MTM3NDMzNjYxNTIw.XuT73w.TQVGmTNPFRwR4jpPEZOKdORk2QU') #Test Boteroni
+#client.run('NzE1ODExMjE3OTAxNjE3MTUy.XuT9Tg.dxEEEw2ULSx2lwLEmRWLzk_r7jg') #Phillip
+client.run('NzIxMjI4MTM3NDMzNjYxNTIw.XuT73w.TQVGmTNPFRwR4jpPEZOKdORk2QU') #Test Boteroni
