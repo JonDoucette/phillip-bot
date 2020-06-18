@@ -408,7 +408,7 @@ class Gambling(commands.Cog):
 
 
 	@commands.command(aliases = ['horseduels'])
-	@commands.cooldown(1, 15, commands.BucketType.server)
+	@commands.cooldown(1, 15, commands.BucketType.guild)
 	async def horseduel(self, ctx, member : discord.Member = None, amount = None):
 		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
