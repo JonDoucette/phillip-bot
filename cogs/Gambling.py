@@ -1040,7 +1040,7 @@ class Gambling(commands.Cog):
 
 
 	@commands.command(aliases = ['leaderboards', 'leader', 'lead', 'leaders'])
-	async def leaderboard(self, ctx):
+	async def leaderboard(self, ctx, specification = None):
 		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
 
@@ -1048,37 +1048,74 @@ class Gambling(commands.Cog):
 		name = ''
 		names = []
 
-		creditList = sheet.getColumn(5)
-		creditList[0] = 0
-		removal = creditList.index('')
-		removal -= 1
-		del creditList[0]
-		del creditList[removal:] #Removes all of the blank credits from the list
-		creditList = list(map(int, creditList)) #Converts all items in the list to integer
+		
+		if specification == None:
+			sheet = ss['weekly']
+			Weekly = sheet.getColumn(4)
+			Weekly[0] = 0
+			removal = Weekly.index('')
+			removal -= 1
+			del Weekly[0]
+			del Weekly[removal:]
+			Weekly = list(map(int, Weekly))
 
-		for i in range(5):
-			amount = max(creditList)
-			index = creditList.index(amount)
+			for i in range(5):
+				amount = max(Weekly)
+				index = Weekly.index(amount)
+				
+				for r in range(200):
+					row = sheet.getRow(r+1)
+					if str(amount) in row:
+						name = sheet[3, (r+1)]
+						
+						if name in names:
+							continue
+						else:
+							names.append(name)
+							break
+
+				response += f'{i+1}. {name:<10} - {amount:>10,d} Weekly Wins\n'
+				index = Weekly.index(amount)
+				del Weekly[index]
+
+			embed = discord.Embed(color = 0xffff00)
+			embed.set_author(name = response)
+			embed.set_footer(text = 'Type !leaderboard credits to view the credit leaderboard')
+
+
+		else:
+			creditList = sheet.getColumn(5)
+			creditList[0] = 0
+			removal = creditList.index('')
+			removal -= 1
+			del creditList[0]
+			del creditList[removal:] #Removes all of the blank credits from the list
+			creditList = list(map(int, creditList)) #Converts all items in the list to integer
+
+			for i in range(5):
+				amount = max(creditList)
+				index = creditList.index(amount)
+				
+				for r in range(200):
+					row = sheet.getRow(r+1)
+					if str(amount) in row:
+						name = sheet[3, (r+1)]
+						
+						if name in names:
+							continue
+						else:
+							names.append(name)
+							break
+
+				response += f'{i+1}. {name:<10} - {amount:>10,d} credits\n'
+				index = creditList.index(amount)
+
+				del creditList[index]
+
+
+			embed = discord.Embed(color = 0xffff00)
+			embed.set_author(name = response)
 			
-			for r in range(200):
-				row = sheet.getRow(r+1)
-				if str(amount) in row:
-					name = sheet[3, (r+1)]
-					
-					if name in names:
-						continue
-					else:
-						names.append(name)
-						break
-
-			response += f'{i+1}. {name:<10} - {amount:>10,d} credits\n'
-			index = creditList.index(amount)
-
-			del creditList[index]
-
-
-		embed = discord.Embed(color = 0xffff00)
-		embed.set_author(name = response)
 		await ctx.send(embed = embed)
 
 	@commands.command(aliases = ['loserboards', 'loser', 'lose', 'losers'])
