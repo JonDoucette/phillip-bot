@@ -42,7 +42,7 @@ people = 0
 money = None
 
 def level_checker(user):
-	ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+	ss = ezsheets.Spreadsheet('id') #Opens up the google spreadsheets 'Tilted'
 	sheet = ss['output']
 
 	location = sheet.getColumn(1).index(user)
@@ -126,7 +126,7 @@ class Gambling(commands.Cog):
 
 
 
-		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
 		user = author.id
 		user = str(user)
@@ -205,7 +205,7 @@ class Gambling(commands.Cog):
 	@commands.cooldown(1, 7, commands.BucketType.user)
 	async def slot(self, ctx, amount = None):
 
-		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
 
 
@@ -410,7 +410,7 @@ class Gambling(commands.Cog):
 	@commands.command(aliases = ['horseduels'])
 	@commands.cooldown(1, 15, commands.BucketType.guild)
 	async def horseduel(self, ctx, member : discord.Member = None, amount = None):
-		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
 
 		global user
@@ -602,7 +602,7 @@ class Gambling(commands.Cog):
 	@commands.command(aliases = ['horseraces', 'horse', 'horses'])
 	@commands.cooldown(1, 10, commands.BucketType.user)
 	async def horserace(self, ctx, amount = None):
-		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
 
 		global user
@@ -856,7 +856,7 @@ class Gambling(commands.Cog):
 		user = str(user)
 
 
-		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
 
 
@@ -882,7 +882,7 @@ class Gambling(commands.Cog):
 	@commands.command(aliases = ['credit', 'balance'])
 	async def credits(self, ctx):
 		author = ctx.message.author
-		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
 		user = author.id
 		user = str(user)
@@ -903,7 +903,7 @@ class Gambling(commands.Cog):
 	@commands.cooldown(1, 86400, commands.BucketType.user)
 	async def daily(self, ctx):
 		author = ctx.message.author
-		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
 		user = author.id
 		user = str(user)
@@ -937,7 +937,7 @@ class Gambling(commands.Cog):
 
 	@commands.command()
 	async def search(self, ctx):
-		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
 		author = ctx.message.author
 		user = author.id
@@ -968,7 +968,7 @@ class Gambling(commands.Cog):
 
 	@commands.command()
 	async def give(self, ctx, member : discord.Member = None, amount = None):
-		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
 
 		if member == None and amount == None:
@@ -1041,7 +1041,7 @@ class Gambling(commands.Cog):
 
 	@commands.command(aliases = ['leaderboards', 'leader', 'lead', 'leaders'])
 	async def leaderboard(self, ctx, specification = None):
-		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
 
 		response = ''
@@ -1120,7 +1120,7 @@ class Gambling(commands.Cog):
 
 	@commands.command(aliases = ['loserboards', 'loser', 'lose', 'losers'])
 	async def loserboard(self, ctx):
-		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
 
 		response = ''
@@ -1175,7 +1175,7 @@ class Gambling(commands.Cog):
 	@commands.command(aliases = ['stat'])
 	async def stats(self, ctx):
 		author = ctx.message.author
-		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
 		user = author.id
 		user = str(user)
@@ -1230,7 +1230,7 @@ class Gambling(commands.Cog):
 
 	@commands.command(aliases =['names', 'change'])
 	async def name(self, ctx, new = None):
-		ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+		ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 		sheet = ss['output']
 
 		if new == None: #Help men
