@@ -1,4 +1,4 @@
-Phillip Bot (Phillip) is a discord bot created for a few small servers.
+Phillip Bot (Phillip) is a discord bot created for a few servers, looking to expand into many servers soon.
 
 Phillip currently is equipped with these commands:
 
