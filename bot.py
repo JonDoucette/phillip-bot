@@ -129,7 +129,7 @@ async def agents(ctx, *, users):
 @commands.has_permissions(administrator = True)
 async def tilted(ctx, member : discord.Member):
 
-	ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+	ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 
 	user = member.id
 	user = str(user)
@@ -191,7 +191,7 @@ async def tilted(ctx, member : discord.Member):
 @commands.has_permissions(administrator = True)
 async def untilted(ctx, member : discord.Member):
 
-	ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+	ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 
 	user = member.id
 	user = str(user)
@@ -233,7 +233,7 @@ async def untilted(ctx, member : discord.Member):
 @commands.has_permissions(administrator = True)
 async def resetTilted(ctx):
 
-	ss = ezsheets.Spreadsheet('14YXEduQ02xnWR7oB9tPpeCpoogPI-YwS9ycwNODxD68') #Opens up the google spreadsheets 'Tilted'
+	ss = ezsheets.Spreadsheet('a') #Opens up the google spreadsheets 'Tilted'
 	sheet = ss['output']
 	sheet.updateColumn(2, ['MMR']) #Updates all of column 2 to only contain Title
 
